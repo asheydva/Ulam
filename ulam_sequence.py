@@ -1,37 +1,6 @@
 from bisect import bisect_left
 import sys
 
-def add_plus_truth(seq,elem):
-    """Adds the elem to seq if not in there and returns whether the element was added or not."""
-
-    #Find the place where we would have to insert the element
-    k = bisect_left(seq,elem)
-
-    if (k >= len(seq)):
-        seq.insert(k,elem)
-        return True
-
-    if (seq[k] == elem):
-        return False
-
-    seq.insert(k,elem)
-    return False
-
-def remove_plus_truth(seq,elem):
-    """Removes the elem to seq if in there and returns whether the element was removed or not."""
-
-    #Find the place where the element would have to be
-    k = bisect_left(seq,elem)
-
-    if (k >= len(seq)):
-        return False
-
-    if (seq[k] == elem):
-        seq.pop(k)
-        return True
-
-    return False
-
 def add_remove_plus_truth(seq,elem):
     """Adds/removes the element. Returns True if removes, False otherwise."""
 
@@ -50,27 +19,12 @@ def add_remove_plus_truth(seq,elem):
     return False
 
 
-
-def contains(seq,elem):
-    """Returns whether seq contains elem"""
-
-    #Find the place where the element would have to be
-    k = bisect_left(seq,elem)
-
-    if (k >= len(seq)):
-        return False
-
-    if (seq[k] == elem):
-        return True
-
-    return False
-
 def ulam_sequence(n,X):
     """Constructs all terms up to X of U(1,n)."""
 
     ulam_seq = [1,n]
     unique_seq = [n + 1]
-    non_unique_seq = []
+    non_unique_set = set()
 
     largest_elem = n + 1
 
@@ -80,12 +34,12 @@ def ulam_sequence(n,X):
         for elem in ulam_seq:
             u = smallest_unique + elem
 
-            #Look in non_unique_seq to see if u is in there
-            if (not contains(non_unique_seq,u)):
+            #Look in non_unique_set to see if u is in there
+            if (u not in non_unique_set):
                 if add_remove_plus_truth(unique_seq, u):
 
                     #If already in unique_set, add to non_unique_set
-                    add_plus_truth(non_unique_seq,u)
+                    non_unique_set.add(u)
 
         largest_elem = unique_seq[0]
         if largest_elem <= X:
