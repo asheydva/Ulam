@@ -1,21 +1,14 @@
-from bisect import bisect_left
 import sys
+import sortedcontainers
 
 def add_remove_plus_truth(seq,elem):
     """Adds/removes the element. Returns True if removes, False otherwise."""
 
-    #Find the place where the element would have to be
-    k = bisect_left(seq,elem)
-
-    if (k >= len(seq)):
-        seq.insert(k,elem)
-        return False
-
-    if (seq[k] == elem):
-        seq.pop(k)
+    if seq.__contains__(elem):
+        seq.remove(elem)
         return True
 
-    seq.insert(k,elem)
+    seq.add(elem)
     return False
 
 
@@ -23,7 +16,7 @@ def ulam_sequence(n,X):
     """Constructs all terms up to X of U(1,n)."""
 
     ulam_seq = [1,n]
-    unique_seq = [n + 1]
+    unique_seq = sortedcontainers.SortedList([n + 1])
     non_unique_set = set()
 
     largest_elem = n + 1
