@@ -28,7 +28,7 @@ def ulam_sequence(n,X):
 
     largest_elem = n + 1
 
-    while (largest_elem <= X):
+    while (True):
         smallest_unique = unique_seq[0]
 
         for elem in ulam_seq:
@@ -41,10 +41,12 @@ def ulam_sequence(n,X):
                     #If already in unique_set, add to non_unique_set
                     non_unique_set.add(u)
 
-        largest_elem = unique_seq[0]
-        if largest_elem <= X:
-            ulam_seq.append(largest_elem)
-            unique_seq.pop(0)
+        largest_elem = unique_seq.pop(0)
+        if largest_elem > X:
+            break
+            
+        ulam_seq.append(largest_elem)
+
 
 
     return ulam_seq
