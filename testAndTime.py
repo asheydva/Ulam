@@ -37,11 +37,12 @@ def runAndTime(cmd, logResult=None):
    print('{}: {:8.2f}'.format(cmd, elapsed_time))
 
 # quick testing
-runAndTime("ulam_sequence.py 2  1000", True)
-runAndTime("ulam_sequence.py 3  3000", True)
-runAndTime("ulam_sequence.py 4  4000", True)
-# don't log results - lines are too long
-runAndTime("ulam_sequence.py 5  5000", False)
+if 1:
+   runAndTime("ulam_sequence.py 2  1000", True)
+   runAndTime("ulam_sequence.py 3  3000", True)
+   runAndTime("ulam_sequence.py 4  4000", True)
+   # don't log results - lines are too long
+   runAndTime("ulam_sequence.py 5  5000", False)
 
 # time consuming
 if 1:
@@ -49,5 +50,12 @@ if 1:
    runAndTime("ulam_sequence.py 2 20000", False)
    runAndTime("ulam_sequence.py 2 40000", False)
    runAndTime("ulam_sequence.py 2 80000", False)
+
+# longest
+if 0:
+   runAndTime("ulam_sequence.py 2 100000", False)
+   runAndTime("ulam_sequence.py 2 200000", False)
+   runAndTime("ulam_sequence.py 2 400000", False)
+   runAndTime("ulam_sequence.py 2 800000", False)
 
 file.close()
