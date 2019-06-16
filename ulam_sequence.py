@@ -104,5 +104,6 @@ if len(sys.argv) > 1:
 if len(sys.argv) > 1:
     X = int(sys.argv.pop(1))
 
-print("ulam_sequence("+str(n)+","+str(X)+")", ulam_sequence(n,X))
+# print("ulam_sequence("+str(n)+","+str(X)+")", ulam_sequence(n,X))
+print(ulam_sequence(n,X))
 
