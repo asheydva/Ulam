@@ -4,18 +4,11 @@ import sys
 def add_remove_plus_truth(seq,elem):
     """Adds/removes the element. Returns True if removes, False otherwise."""
 
-    #Find the place where the element would have to be
-    k = bisect_left(seq,elem)
-
-    if (k >= len(seq)):
-        seq.insert(k,elem)
-        return False
-
-    if (seq[k] == elem):
-        seq.pop(k)
+    if elem in seq:
+        seq.remove(elem) # TODO: speed up
         return True
 
-    seq.insert(k,elem)
+    seq.add(elem)
     return False
 
 
@@ -23,13 +16,13 @@ def ulam_sequence(n,X):
     """Constructs all terms up to X of U(1,n)."""
 
     ulam_seq = [1,n]
-    unique_seq = [n + 1]
+    unique_seq = set([n + 1])
     non_unique_set = set()
 
     largest_elem = n + 1
 
     while (True):
-        smallest_unique = unique_seq[0]
+        smallest_unique = min(unique_seq)
 
         for elem in ulam_seq:
             u = smallest_unique + elem
@@ -41,10 +34,12 @@ def ulam_sequence(n,X):
                     #If already in unique_set, add to non_unique_set
                     non_unique_set.add(u)
 
-        largest_elem = unique_seq.pop(0)
+        largest_elem = min(unique_seq)
+        unique_seq.remove(largest_elem) # TODO: speed up
+        
         if largest_elem > X:
             break
-            
+
         ulam_seq.append(largest_elem)
 
 
