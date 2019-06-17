@@ -34,7 +34,7 @@ def runAndTime(cmd, logResult=None):
       file.write(output)
       file.write('\n')
 
-   print('{}: {:8.2f}'.format(cmd, elapsed_time))
+   print('{}: {:10.2f}'.format(cmd, elapsed_time))
 
 # quick testing
 if 1:
@@ -58,4 +58,7 @@ if 0:
    runAndTime("ulam_sequence.py 2 400000", False)
    runAndTime("ulam_sequence.py 2 800000", False)
 
+if 1:
+   for i in range(1000):
+      runAndTime("ulam_sequence.py 2 \t" + str(2**i * 100000), False)
 file.close()
