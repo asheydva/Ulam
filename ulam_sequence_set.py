@@ -1,4 +1,3 @@
-from bisect import bisect_left
 import sys
 
 def add_remove_plus_truth(seq,elem):
