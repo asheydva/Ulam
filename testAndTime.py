@@ -39,9 +39,9 @@ def runAndTime(cmd, logResult=None):
 if 1:
    runAndTime("ulam_sequence_set.py 2  1000", True)
    runAndTime("ulam_sequence_set.py 3  3000", True)
-   runAndTime("ulam_sequence_srt.py 4  4000", True)
+   runAndTime("ulam_sequence_set.py 4  4000", True)
    # don't log results - lines are too long
-   runAndTime("ulam_sequence_srt.py 5  5000", False)
+   runAndTime("ulam_sequence_set.py 5  5000", False)
 file.close()
 
 # time consuming
@@ -58,7 +58,7 @@ if 0:
    runAndTime("ulam_sequence.py 2 400000", False)
    runAndTime("ulam_sequence.py 2 800000", False)
 
-if 1:
+if 0:
    for i in range(1000):
       for n in range(4, 7):
          runAndTime("ulam_sequence_set.py" + str(n).rjust(2) + "\t" + str(2**i * n * 10000).rjust(8), False)
