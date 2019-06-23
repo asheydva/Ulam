@@ -1,4 +1,5 @@
 import sys
+from RangeList import RangeList
 
 def add_remove_plus_truth(seq,elem):
     """Adds/removes the element. Returns True if removes, False otherwise."""
@@ -14,7 +15,7 @@ def add_remove_plus_truth(seq,elem):
 def ulam_sequence(n,X):
     """Constructs all terms up to X of U(1,n)."""
 
-    ulam_seq = [1,n]
+    ulam_seq = RangeList(1,n)
     unique_seq = set([n + 1])
     non_unique_set = set()
 
@@ -35,7 +36,7 @@ def ulam_sequence(n,X):
 
         largest_elem = min(unique_seq)
         unique_seq.remove(largest_elem) # TODO: speed up
-        
+
         if largest_elem > X:
             break
 
