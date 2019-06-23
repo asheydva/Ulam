@@ -1,4 +1,9 @@
-import sys
+import sys, os
+
+# defaults
+n = 2
+X = 1000
+file = None
 
 def add_remove_plus_truth(set,elem):
     """Adds/removes the element. Returns True if removes, False otherwise."""
@@ -41,19 +46,23 @@ def ulam_sequence(n,X):
 
         ulam_seq.append(largest_elem)
 
-
-
     return ulam_seq
-
-# defaults
-n = 2
-X = 1000
 
 if len(sys.argv) > 1:
     n = int(sys.argv.pop(1))
 if len(sys.argv) > 1:
     X = int(sys.argv.pop(1))
+if len(sys.argv) > 1:
+    fileName = sys.argv.pop(1)
+    if os.path.exists(fileName):
+        os.remove(fileName)
+    file = open(fileName, 'w+')
 
 # print("ulam_sequence("+str(n)+","+str(X)+")", ulam_sequence(n,X))
-print(ulam_sequence(n,X))
+if file:
+    for n in ulam_sequence(n,X):
+        file.write(str(n) + '\n')
 
+    file.close()
+else:
+    print(ulam_sequence(n,X))
