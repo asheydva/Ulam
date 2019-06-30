@@ -1,8 +1,6 @@
 # test and time ulam_sequence routine
 
-import time
-import subprocess
-import os
+from runAndTime import runAndTime
 
 # sample results
 # ulam_sequence.py 2  1000:     0.17
@@ -14,23 +12,25 @@ import os
 # ulam_sequence.py 2 40000:     4.95
 # ulam_sequence.py 2 80000:    20.24
 
-def runAndTime(cmd):
-   start_time = time.time()
-   subprocess.check_output(cmd, shell=True, universal_newlines=True)
-   elapsed_time = time.time() - start_time
+if 0:
+    n = 4
+    str1 = str(n).rjust(2, '0')
+    str2 = str(n * 1000).rjust(8, '0')
+    logFile = ' test-' + str1 + '-' + str2 + '.log'
+    runAndTime("ulam_sequence_set.py " + str1 + ' ' + str2 + logFile)
 
-   print('{}: {:10.2f}'.format(cmd, elapsed_time))
+if 0:
+    for n in range(4, 17):
+        str1 = str(n).rjust(2, '0')
+        str2 = str(n * 1000000).rjust(8, '0')
+        logFile = ' ulam_sequence-' + str1 + '-' + str2 + '.log'
+        runAndTime("ulam_sequence_set.py " + str1 + ' ' + str2 + logFile)
 
 if 1:
-   n = 4
-   str1 = str(n).rjust(2, '0')
-   str2 = str(n * 1000).rjust(8, '0')
-   logFile = ' test-' + str1 + '-' + str2 + '.log'
-   runAndTime("ulam_sequence_set.py " + str1 + ' ' + str2 + logFile)
+    for n in range(2, 100):
+        C = 2**n
+        str1 = str(C).rjust(4, '0')
+        str2 = "" ### str(C * 100).rjust(8, '0')
+        logFile = "" ###' Abstract_Ulam_Sequence-' + str1 + '-' + str2 + '.log'
+        runAndTime("Abstract_Ulam_Sequence.py " + str1 + ' ' + str2 + logFile)
 
-if 1:
-   for n in range(4, 17):
-      str1 = str(n).rjust(2, '0')
-      str2 = str(n * 1000000).rjust(8, '0')
-      logFile = ' ulam_sequence-' + str1 + '-' + str2 + '.log'
-      runAndTime("ulam_sequence_set.py " + str1 + ' ' + str2 + logFile)

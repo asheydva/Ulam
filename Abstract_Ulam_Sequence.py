@@ -677,10 +677,27 @@ n = NonStandardInteger(1,0,R)
 one = NonStandardInteger(0,1,R)
 U = NonStandardUlamSequence(R)
 
-def Ulam_up_to_C(C):
-    """Prints all Ulam coefficients up to Cn."""
+def UlamCoefficients(C):
+    """Prints all Ulam coefficients up to C."""
     return U.coeff_up_to(C * n).comparable_print()
 
 if __name__ == "__main__":
-    print(Ulam_up_to_C(100))
+    import sys, os
+
+    C = 10
+    if len(sys.argv) > 1:
+        C = int(sys.argv.pop(1))
+    # if len(sys.argv) > 1:
+    #     fileName = sys.argv.pop(1)
+    #     if os.path.exists(fileName):
+    #         os.remove(fileName)
+    #     file = open(fileName, 'w+')
+
+    if 1:
+        print(UlamCoefficients(C))
+
+
+
+
+
 
