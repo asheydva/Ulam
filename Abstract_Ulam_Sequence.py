@@ -390,8 +390,8 @@ class DisjointSequences:
         new_seq_list = self.sequence_list[0:]
 
         #obtain starting and ending points of the list of sequences
-        initial_list = map(lambda seq: seq.initial, new_seq_list)
-        final_list = map(lambda seq: seq.final, new_seq_list)
+        initial_list = [seq.initial for seq in new_seq_list]
+        final_list = [seq.final for seq in new_seq_list]
 
         start = seq.initial
         end = seq.final
@@ -439,8 +439,8 @@ class DisjointSequences:
         new_seq_list = self.sequence_list[0:]
 
         #obtain starting and ending points of the list of sequences
-        initial_list = map(lambda seq: seq.initial, new_seq_list)
-        final_list = map(lambda seq: seq.final, new_seq_list)
+        initial_list = [seq.initial for seq in new_seq_list]
+        final_list = [seq.final for seq in new_seq_list]
 
         start = seq.initial
         end = seq.final
@@ -491,7 +491,7 @@ class DisjointSequences:
             return DisjointSequences([], False, True)
 
         #otherwise, find the index of the smallest interval that intersects the bound
-        initial_list = map(lambda seq: seq.initial, new_seq_list)
+        initial_list = [seq.initial for seq in new_seq_list]
         i = bisect_right(initial_list, elem)
 
         #find the last sequence that might intersect the bound, and the list of everything after that
@@ -682,5 +682,5 @@ def Ulam_up_to_C(C):
     return U.coeff_up_to(C * n).comparable_print()
 
 if __name__ == "__main__":
-    print(Ulam_up_to_C(3))
+    print(Ulam_up_to_C(100))
 
