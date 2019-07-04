@@ -693,11 +693,12 @@ if __name__ == "__main__":
     #         os.remove(fileName)
     #     file = open(fileName, 'w+')
 
-    if 1:
+    if 1: # just print out
         print(UlamCoefficients(C))
 
-
-
-
+    elif 0: # profile
+        import cProfile
+        print('UlamCoefficients', C)
+        cProfile.run('UlamCoefficients(C)')
 
 

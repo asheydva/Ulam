@@ -1,0 +1,20 @@
+ulam_sequence 4 1280000
+         10090899 function calls in 3293.004 seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.052    0.052 3293.004 3293.004 <string>:1(<module>)
+        2    0.000    0.000    0.012    0.006 cp1252.py:18(encode)
+        1 3225.846 3225.846 3292.900 3292.900 ulam_sequence_set.py:19(ulam_sequence)
+  3751764    1.652    0.000    2.170    0.000 ulam_sequence_set.py:8(add_remove_plus_truth)
+        2    0.012    0.006    0.012    0.006 {built-in method _codecs.charmap_encode}
+        1    0.000    0.000 3293.004 3293.004 {built-in method builtins.exec}
+   407626   64.577    0.000   64.577    0.000 {built-in method builtins.min}
+        1    0.040    0.040    0.051    0.051 {built-in method builtins.print}
+  3751764    0.461    0.000    0.461    0.000 {method 'add' of 'set' objects}
+   203812    0.048    0.000    0.048    0.000 {method 'append' of 'list' objects}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+  1975924    0.315    0.000    0.315    0.000 {method 'remove' of 'set' objects}
+
+
