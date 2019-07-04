@@ -717,9 +717,15 @@ def UlamCoefficients(C):
 def write_all_Ulam_data_up_to(C):
     """Writes files with all of the important Ulam data."""
 
+    exclusionsFile = "Results/Exclusions_Data.txt"
+    os.makedirs(os.path.dirname(exclusionsFile), exist_ok=True)
+    
     if precomputedExclusionsFile:
-        copyfile(precomputedExclusionsFile, "Exclusions_Data.txt")
-    exclusions_file = open("Exclusions_Data.txt","a")
+        copyfile(precomputedExclusionsFile, exclusionsFile)
+        mode = "a"
+    else:
+        mode = "w"
+    exclusions_file = open(exclusionsFile, mode)
 
     while U.ulam_ds.sequence_list[-1].final.less_than_wo_guess(C*n):
         U.extend_one_sequence()
@@ -729,7 +735,7 @@ def write_all_Ulam_data_up_to(C):
 
     exclusions_file.close()
 
-    ulam_file = open("Ulam_Coeff.txt","w")
+    ulam_file = open("Results/Ulam_Coeff.txt","w")
     for seq in U.ulam_ds.sequence_list:
         initial = seq.initial
         final = seq.final
@@ -738,7 +744,7 @@ def write_all_Ulam_data_up_to(C):
 
     ulam_file.close()
 
-    one_rep_file = open("Ulam_One_Rep.txt","w")
+    one_rep_file = open("Results/Ulam_One_Rep.txt","w")
     for seq in U.one_rep_ds.sequence_list:
         initial = seq.initial
         final = seq.final
@@ -747,7 +753,7 @@ def write_all_Ulam_data_up_to(C):
 
     one_rep_file.close()
 
-    multiple_rep_file = open("Ulam_Multiple_Rep.txt","w")
+    multiple_rep_file = open("Results/Ulam_Multiple_Rep.txt","w")
     for seq in U.multiple_rep_ds.sequence_list:
         initial = seq.initial
         final = seq.final

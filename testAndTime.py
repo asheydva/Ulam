@@ -27,7 +27,7 @@ if 0:
         runAndTime("ulam_sequence.py " + str1 + ' ' + str2 + logFile)
 
 if 1:
-    for n in range(2, 100):
+    for n in range(2, 10):
         C = 2**n
         str1 = str(C).rjust(4, '0')
         str2 = "" ### str(C * 100).rjust(8, '0')
