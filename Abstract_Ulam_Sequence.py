@@ -728,7 +728,7 @@ def write_all_Ulam_data_up_to(C):
 
     exclusions_file.close()
 
-    ulam_file = open("Ulam_Coeff.txt","a")
+    ulam_file = open("Ulam_Coeff.txt","w")
     for seq in U.ulam_ds.sequence_list:
         initial = seq.initial
         final = seq.final
