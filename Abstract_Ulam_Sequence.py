@@ -572,7 +572,7 @@ class NonStandardUlamSequence:
             [self.ulam_ds, self.one_rep_ds, self.multiple_rep_ds] = ulam_data
 
             self.largest_constant_computed = (self.ulam_ds.sequence_list[-1].final).next()
-        
+
     def __repr__(self):
         return("Nonstandard Ulam sequence U(1,N) computed up to " + str(self.largest_constant_computed))
 
@@ -701,15 +701,12 @@ def import_ds(filename, ring):
 
     return DisjointSequences(seq_list, False, True)
 
+# default initialization
 R = NonStandardRing()
 n = NonStandardInteger(1,0,R)
 one = NonStandardInteger(0,1,R)
+U = NonStandardUlamSequence(R)
 
-ulam_ds = import_ds("Ulam_Coeff.txt",R)
-one_rep_ds = import_ds("Ulam_One_Rep.txt",R)
-multiple_rep_ds = import_ds("Ulam_Multiple_Rep.txt",R)
-
-U = NonStandardUlamSequence(R, [ulam_ds, one_rep_ds, multiple_rep_ds])
 
 def UlamCoefficients(C):
     """Prints all Ulam coefficients up to C."""
@@ -760,6 +757,13 @@ def write_all_Ulam_data_up_to(C):
 
 if __name__ == "__main__":
     import sys, os
+
+    if 0: # load previous results
+        ulam_ds = import_ds("Ulam_Coeff.txt",R)
+        one_rep_ds = import_ds("Ulam_One_Rep.txt",R)
+        multiple_rep_ds = import_ds("Ulam_Multiple_Rep.txt",R)
+
+        U = NonStandardUlamSequence(R, [ulam_ds, one_rep_ds, multiple_rep_ds])
 
     C = 10
     if len(sys.argv) > 1:
