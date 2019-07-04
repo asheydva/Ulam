@@ -164,6 +164,10 @@ class NonStandardRing():
     def update_exclusions(self, exclusion):
         self.exclusions_set.add(exclusion)
 
+    def reset_all_exclusions(self):
+        self.minimal_guess = 4
+        self.exclusions_set = set([])
+
     def print_all_exclusions(self):
         """Prints a string describing all obstacles to standardization."""
         ex_list = list(self.exclusions_set)
@@ -539,28 +543,36 @@ class DisjointSequences:
 
 class NonStandardUlamSequence:
     """Ulam sequence over non-standard integers in the ring R."""
-    def __init__(self,R):
+    def __init__(self,R,ulam_data = []):
         self.base_ring = R
 
-        one = NonStandardInteger(0,1,R)
-        n = NonStandardInteger(1,0,R)
+        if ulam_data == []:
 
-        #Keeps track of largest coefficients that have been computed.
-        self.largest_constant_computed = 2*n + one
+            one = NonStandardInteger(0,1,R)
+            n = NonStandardInteger(1,0,R)
 
-        #First two sequences of the Ulam sequence
-        seq1 = ArithmeticSequence(one,one)
-        seq2 = ArithmeticSequence(n,2*n)
+            #Keeps track of largest coefficients that have been computed.
+            self.largest_constant_computed = 2*n + one
 
-        #Disjoint sequences for the Ulam sequence
-        self.ulam_ds = DisjointSequences([seq1, seq2], False, True)
+            #First two sequences of the Ulam sequence
+            seq1 = ArithmeticSequence(one,one)
+            seq2 = ArithmeticSequence(n,2*n)
 
-        #Disjoint sequences larger than the largest computed with one representation
-        self.one_rep_ds = DisjointSequences([], False, True)
+            #Disjoint sequences for the Ulam sequence
+            self.ulam_ds = DisjointSequences([seq1, seq2], False, True)
 
-        #Disjoint sequences larger than the largest computed with >1 representation
-        self.multiple_rep_ds = DisjointSequences([], False, True)
+            #Disjoint sequences larger than the largest computed with one representation
+            self.one_rep_ds = DisjointSequences([], False, True)
 
+            #Disjoint sequences larger than the largest computed with >1 representation
+            self.multiple_rep_ds = DisjointSequences([], False, True)
+
+        else:
+            #if data for specifying the sequence is provided, use that instead
+            [self.ulam_ds, self.one_rep_ds, self.multiple_rep_ds] = ulam_data
+
+            self.largest_constant_computed = (self.ulam_ds.sequence_list[-1].final).next()
+        
     def __repr__(self):
         return("Nonstandard Ulam sequence U(1,N) computed up to " + str(self.largest_constant_computed))
 
@@ -672,14 +684,79 @@ class NonStandardUlamSequence:
 
         return self.ulam_ds
 
+def import_ds(filename, ring):
+    f = open(filename, "r")
+
+    seq_list = []
+
+    for line in f:
+        ((a0,b0),(a1,b1)) = eval(line)
+        start = NonStandardInteger(a0,b0,ring)
+        end = NonStandardInteger(a1, b1, ring)
+
+        seq = ArithmeticSequence(start, end)
+        seq_list.append(seq)
+
+    f.close()
+
+    return DisjointSequences(seq_list, False, True)
+
 R = NonStandardRing()
 n = NonStandardInteger(1,0,R)
 one = NonStandardInteger(0,1,R)
-U = NonStandardUlamSequence(R)
+
+ulam_ds = import_ds("Ulam_Coeff.txt",R)
+one_rep_ds = import_ds("Ulam_One_Rep.txt",R)
+multiple_rep_ds = import_ds("Ulam_Multiple_Rep.txt",R)
+
+U = NonStandardUlamSequence(R, [ulam_ds, one_rep_ds, multiple_rep_ds])
 
 def UlamCoefficients(C):
     """Prints all Ulam coefficients up to C."""
     return U.coeff_up_to(C * n).comparable_print()
+
+def write_all_Ulam_data_up_to(C):
+    """Writes files with all of the important Ulam data."""
+
+    exclusions_file = open("Exclusions_Data.txt","a")
+
+    while U.ulam_ds.sequence_list[-1].final.less_than_wo_guess(C*n):
+        U.extend_one_sequence()
+        exclusions_file.write(str(U.largest_constant_computed) + ": " + R.print_all_exclusions())
+        exclusions_file.write("\n")
+        R.reset_all_exclusions()
+
+    exclusions_file.close()
+
+    ulam_file = open("Ulam_Coeff.txt","a")
+    for seq in U.ulam_ds.sequence_list:
+        initial = seq.initial
+        final = seq.final
+        ulam_file.write(str((initial, final)))
+        ulam_file.write("\n")
+
+    ulam_file.close()
+
+    one_rep_file = open("Ulam_One_Rep.txt","w")
+    for seq in U.one_rep_ds.sequence_list:
+        initial = seq.initial
+        final = seq.final
+        one_rep_file.write(str((initial, final)))
+        one_rep_file.write("\n")
+
+    one_rep_file.close()
+
+    multiple_rep_file = open("Ulam_Multiple_Rep.txt","w")
+    for seq in U.multiple_rep_ds.sequence_list:
+        initial = seq.initial
+        final = seq.final
+        multiple_rep_file.write(str((initial, final)))
+        multiple_rep_file.write("\n")
+
+    multiple_rep_file.close()
+
+    return "All data written."
+
 
 if __name__ == "__main__":
     import sys, os
