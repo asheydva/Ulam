@@ -76,27 +76,27 @@ class NonStandardInteger():
         b = self.non_st_part
         c = other.st_part
         d = other.non_st_part
-
+        
         if b == d:
             return a <= c
-
+        
         #Finds smallest n such that a + bn <= c + dn.
         guess = ceil(float(c - a)/float(b - d))
 
         if guess > UPDATE_BOUND:
             print (self,other,guess)
-
+            
         self.non_st_ring.update_guess(guess)
-
+        
         return b < d
-
+    
     def __gt__(self, other):
         """Returns whether self > other. Finds smallest n such that this can be standardized."""
         c = self.st_part
         d = self.non_st_part
         a = other.st_part
         b = other.non_st_part
-
+        
         if b == d:
             return a < c
 
@@ -105,18 +105,18 @@ class NonStandardInteger():
 
         if guess > UPDATE_BOUND:
             print (self,other,guess)
-
+            
         self.non_st_ring.update_guess(guess)
-
+        
         return b < d
-
+        
     def __ge__(self, other):
         """Returns whether self >= other. Finds smallest n such that this can be standardized."""
         c = self.st_part
         d = self.non_st_part
         a = other.st_part
         b = other.non_st_part
-
+        
         if b == d:
             return a <= c
 
@@ -125,25 +125,25 @@ class NonStandardInteger():
 
         if guess > UPDATE_BOUND:
             print (self,other,guess)
-
+        
         self.non_st_ring.update_guess(guess)
-
+        
         return b < d
-
+    
     def next(self, n = 1):
         """Returns the next non-standard integer n away."""
         return NonStandardInteger(self.non_st_part, self.st_part + n, self.non_st_ring)
-
+    
     def previous(self, n = 1):
         """Returns the previous non-standard integer n away."""
         return NonStandardInteger(self.non_st_part, self.st_part - n, self.non_st_ring)
-
+    
     def __add__(self, other):
         return NonStandardInteger(self.non_st_part + other.non_st_part, self.st_part + other.st_part, self.non_st_ring)
-
+    
     def __sub__(self, other):
         return NonStandardInteger(self.non_st_part - other.non_st_part, self.st_part - other.st_part, self.non_st_ring)
-
+    
     def __rmul__(self, other):
         """"Used to scale a non-standard integer by an integer."""
         return NonStandardInteger(self.non_st_part * other, self.st_part * other, self.non_st_ring)
@@ -152,9 +152,9 @@ class NonStandardInteger():
 class NonStandardRing():
     """Class to keep track of results of inequalities of non-standard integers."""
     def __init__(self):
-        self.minimal_guess = 1 #guesses minimal n needed to make all inequalities <, > valid.
+        self.minimal_guess = 4 #guesses minimal n needed to make all inequalities <, > valid.
         self.exclusions_set = set([]) #keeps track of all n that make != inequalities work.
-
+        
     def __repr__(self):
         return("Nonstandard Ring Z[N]; standardized for " + self.print_all_exclusions())
 
@@ -194,27 +194,27 @@ class ArithmeticSequence:
         if start > end:
             print(start,end)
             raise ValueError("Start of interval larger than end of interval.")
-
+        
         self.initial = start
         self.final = end
-
+        
     def __repr__(self):
         if self.is_singleton():
             return("Singleton " + str(self.initial))
         return("Sequence of elements with endpoints %s and %s" % (self.initial, self.final))
-
+        
     def __contains__(self, elem):
         """Specifies whether the non-standard integer elem is in the sequence."""
         if elem >= self.initial:
             if elem <= self.final:
                 return True
-
+            
         return False
-
+    
     def is_singleton(self):
         """Specifies whether the sequence consists of just a single element."""
         return self.initial == self.final
-
+    
     def __eq__(self, other):
         if self.initial != other.initial:
             return False
@@ -223,17 +223,17 @@ class ArithmeticSequence:
             return False
 
         return True
-
+    
     def intersects(self, other):
         """Returns whether two sequences intersect each other."""
         if other.final >= self.initial:
             if other.initial <= self.final:
                 return True
-
+            
         if self.final >= other.initial:
             if self.initial <= other.final:
                 return True
-
+            
         return False
 
     #Define methods that allow addition of sequences. This is Minkowski addition, except only distinct sums are allowed, and we keep track of whether an element has just one representation, or multiple.
@@ -241,29 +241,29 @@ class ArithmeticSequence:
         """Addition for distinct sequences."""
         if self.intersects(seq2):
             raise ValueError("Only addition of non-intersecting sequences is defined.")
-
+            
         #Representation dictionary keeps track of sums, and whether they can be obtained in just one way, or many.
         representation_dictionary = {"One representation":[], "Multiple representations":[]}
-
+        
         if self.is_singleton() or seq2.is_singleton():
             #If either sequence is a singleton, addition is just the Minkowski sum.
             representation_dictionary["One representation"] = [ArithmeticSequence(self.initial + seq2.initial, self.final + seq2.final)]
-
+            
         else:
             #If neither sequence is a singleton, most elements in the middle will have multiple representations.
             start = self.initial + seq2.initial
             end = self.final + seq2.final
-
+            
             if start < end.previous(2):
                 representation_dictionary["One representation"] = [ArithmeticSequence(start, start.next()), ArithmeticSequence(end.previous(), end)]
-
+                
                 if start <= end.previous(4):
                     representation_dictionary["Multiple representations"] = [ArithmeticSequence(start.next(2), end.previous(2))]
-
+                
             else:
                 representation_dictionary["One representation"] = [ArithmeticSequence(start, end)]
-
-
+                
+                
         return representation_dictionary
 
     def add_to_itself(self):
@@ -275,7 +275,7 @@ class ArithmeticSequence:
         #Have special cases if sequence is short.
         if self.is_singleton():
             return representation_dictionary
-
+        
         a = self.initial
         b = self.final
 
@@ -283,56 +283,56 @@ class ArithmeticSequence:
             x = (2*a).next()
             representation_dictionary["One representation"] = [ArithmeticSequence(x,x)]
             return representation_dictionary
-
+            
         if b == a.next(2):
             x = (2*a).next()
             y = x.next(2)
-
+            
             representation_dictionary["One representation"] = [ArithmeticSequence(x, y)]
             return representation_dictionary
 
         #From here, all sequences are long.
-
+        
         #Rough order of new endpoints.
         x = 2*a
         y = 2*b
-
+        
         representation_dictionary["One representation"] = [ArithmeticSequence(x.next(), x.next(2)), ArithmeticSequence(y.previous(2), y.previous())]
         representation_dictionary["Multiple representations"] = [ArithmeticSequence(x.next(3), y.previous(3))]
         return representation_dictionary
-
+    
     def span(self, other):
         """Finds the smallest sequence that contains both self and other."""
         start = min(self.initial, other.initial)
         end = max(self.final, other.final)
-
+        
         return ArithmeticSequence(start, end)
-
+    
     def intersection(self, other):
         """Finds the intersection of two sequences."""
         if self.intersects(other):
             start = max(self.initial, other.initial)
             end = min(self.final, other.final)
-
+            
             return ArithmeticSequence(start, end)
-
+            
         return []
-
+    
     def cut_out(self, other):
         """Removes any elements of other from self. This is a list of as many as two sequences."""
 
         #Keeps track of sequences in the complement
         sequences_not_cut_out = []
-
+        
         if self.initial < other.initial:
             sequences_not_cut_out.append(ArithmeticSequence(self.initial, min(self.final, other.initial.previous())))
-
+            
         if self.final > other.final:
             sequences_not_cut_out.append(ArithmeticSequence(max(self.initial, other.final.next()),self.final))
-
+            
         return sequences_not_cut_out
 
-
+    
     def next_singleton(self):
         """Returns the singleton after this current sequence."""
         return ArithmeticSequence(self.final.next(), self.final.next())
@@ -340,7 +340,7 @@ class ArithmeticSequence:
 class DisjointSequences:
     """Container of disjoint arithmetic sequences, kept in order."""
     def __init__(self, disjoint_seq_list, check_disjoint = True, presorted = False):
-
+        
         #If the list of disjoint sequences isn't already sorted, start by sorting it.
         if not presorted:
             disjoint_seq_list = sorted(disjoint_seq_list, key=lambda sequence: sequence.initial)
@@ -348,32 +348,32 @@ class DisjointSequences:
             #If it is unknown if elements of list are disjoint, check that this is true.
             if check_disjoint:
                 num_seq = len(disjoint_seq_list)
-
+                
                 for i in range(num_seq - 1):
                     seq1 = disjoint_seq_list[i]
                     seq2 = disjoint_seq_list[i + 1]
-
+                    
                     if seq1.intersects(seq2):
                         raise ValueError("Inputs must be disjoint sequences.")
-
+                        
         self.sequence_list = disjoint_seq_list
-
+        
     def __repr__(self):
         return("Increasing sequences: " + str(self.sequence_list))
-
+    
     def formal_print(self):
         """Gives a more easily readable print-out of the coefficients."""
         formal_list = []
-
+        
         for seq in self.sequence_list:
             a = seq.initial
             b = seq.final
-
+            
             if a == b:
                 formal_list.append(a)
             else:
                 formal_list.append([a,b])
-
+                
         return formal_list
 
     def comparable_print(self):
@@ -387,15 +387,15 @@ class DisjointSequences:
             comparable_list.append((a,b))
 
         return comparable_list
-
+        
     def shuffle_in(self, seq, return_index = False, starting_index = 0):
         """Unions in sequence seq into self. Can also return the last index where shuffling ends."""
 
         new_seq_list = self.sequence_list[0:]
 
         #obtain starting and ending points of the list of sequences
-        initial_list = [seq.initial for seq in new_seq_list]
-        final_list = [seq.final for seq in new_seq_list]
+        initial_list = map(lambda seq: seq.initial, new_seq_list)
+        final_list = map(lambda seq: seq.final, new_seq_list)
 
         start = seq.initial
         end = seq.final
@@ -429,7 +429,7 @@ class DisjointSequences:
             end_seq_list = new_seq_list[i_final:]
 
             new_seq_list = start_seq_list + [middle_seq] + end_seq_list
-
+            
         ds = DisjointSequences(new_seq_list, False, True)
 
         if return_index:
@@ -439,12 +439,12 @@ class DisjointSequences:
 
     def cut_out(self, seq, return_index = False, starting_index = 0):
         """Cuts out any elements of the sequence seq. Can also return the index of the last sequence where cutting occured."""
-
+        
         new_seq_list = self.sequence_list[0:]
 
         #obtain starting and ending points of the list of sequences
-        initial_list = [seq.initial for seq in new_seq_list]
-        final_list = [seq.final for seq in new_seq_list]
+        initial_list = map(lambda seq: seq.initial, new_seq_list)
+        final_list = map(lambda seq: seq.final, new_seq_list)
 
         start = seq.initial
         end = seq.final
@@ -469,7 +469,7 @@ class DisjointSequences:
             end_seq_list = new_seq_list[i_final:]
 
             new_seq_list = start_seq_list + middle_seq_list + end_seq_list
-
+            
         ds = DisjointSequences(new_seq_list, False, True)
 
         if return_index:
@@ -495,7 +495,7 @@ class DisjointSequences:
             return DisjointSequences([], False, True)
 
         #otherwise, find the index of the smallest interval that intersects the bound
-        initial_list = [seq.initial for seq in new_seq_list]
+        initial_list = map(lambda seq: seq.initial, new_seq_list)
         i = bisect_right(initial_list, elem)
 
         #find the last sequence that might intersect the bound, and the list of everything after that
@@ -507,7 +507,7 @@ class DisjointSequences:
             uncut_seq_list = [ArithmeticSequence(elem.next(), last_cut_seq.final)] + uncut_seq_list
 
         return DisjointSequences(uncut_seq_list, False, True)
-
+    
     def __add__(self, other):
         """Returns the union of self and other."""
 
@@ -537,7 +537,7 @@ class DisjointSequences:
 
         diff_1 = self - other
         diff_2 = other - self
-
+        
         return diff_1 + diff_2
 
 
@@ -575,15 +575,15 @@ class NonStandardUlamSequence:
         
     def __repr__(self):
         return("Nonstandard Ulam sequence U(1,N) computed up to " + str(self.largest_constant_computed))
-
+        
     def extend_one_sequence(self):
         """Computes the next block of the Ulam sequence."""
-
+        
         ulam_length = len(self.ulam_ds.sequence_list)
-
+        
         #Add every block in the Ulam sequence to the last block to be added
         #No need to consider adding 1, as this is handled on the previous iteration
-        for i in range(1,ulam_length):
+        for i in range(1,ulam_length):            
             if i == ulam_length - 1:
                 #Addition of the last block to itself handled separately
                 seq2 = ((self.ulam_ds).sequence_list)[-1]
@@ -593,7 +593,7 @@ class NonStandardUlamSequence:
                 seq1 = ((self.ulam_ds).sequence_list)[i]
                 seq2 = ((self.ulam_ds).sequence_list)[-1]
                 representation_dictionary = seq1 + seq2
-
+            
             #store results as disjoint sequences
             one_rep_ds_guess = DisjointSequences(representation_dictionary["One representation"], False, True)
             multiple_rep_ds_guess = DisjointSequences(representation_dictionary["Multiple representations"], False, True)
@@ -627,19 +627,19 @@ class NonStandardUlamSequence:
         self.multiple_rep_ds = self.multiple_rep_ds.select_larger_than(a)
 
         n = NonStandardInteger(1,0,self.base_ring)
-
+        
         if a == b:
             #By adding +1, we get a sequence, until we hit something in either one_rep_ds or multiple_rep_ds
 
             #if a > n is in Ulam, then a + n is not, which gives a worst case bound
             trivial_bound = a + n
-
+            
             #compute bound coming from one_rep_ds
             one_rep_list = (self.one_rep_ds).sequence_list
             if len(one_rep_list) == 1:
                 #if one_rep_ds only has one block, default to trivial bound
                 one_rep_bound = trivial_bound
-
+                
             else:
                 #if there is something else there, choose the smallest
                 one_rep_bound = one_rep_list[1].initial
@@ -653,7 +653,7 @@ class NonStandardUlamSequence:
             else:
                 #if there is something there, choose the smallest
                 multiple_rep_bound = multiple_rep_list[0].initial
-
+            
             #actual bound is the smallest among these
             bound = min(trivial_bound, one_rep_bound)
             bound = min(bound, multiple_rep_bound)
@@ -664,7 +664,7 @@ class NonStandardUlamSequence:
 
             #cut out everything from one_rep <= bound
             self.one_rep_ds = self.one_rep_ds.select_larger_than(bound)
-
+            
         else:
             #By adding +1, the next element after a already has two representations
             #Thus, the next block in Ulam is a singleton
@@ -674,9 +674,9 @@ class NonStandardUlamSequence:
             #cut out everything from one_rep and multiple_rep <= a + 1
             self.one_rep_ds = self.one_rep_ds.select_larger_than(a.next())
             self.multiple_rep_ds = self.multiple_rep_ds.select_larger_than(a.next())
-
+                
         self.largest_constant_computed = (self.ulam_ds.sequence_list[-1].final).next()
-
+                
     def coeff_up_to(self, bound):
         if self.largest_constant_computed.less_than_wo_guess(bound):
             while self.ulam_ds.sequence_list[-1].final.less_than_wo_guess(bound):
