@@ -1,0 +1,55 @@
+UlamCoefficients 64
+         1165904 function calls (1160490 primitive calls) in 0.865 seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    0.865    0.865 <string>:1(<module>)
+      987    0.001    0.000    0.002    0.000 Abstract_Ulam_Sequence.py:113(__ge__)
+   107122    0.038    0.000    0.038    0.000 Abstract_Ulam_Sequence.py:13(__init__)
+    53417    0.034    0.000    0.053    0.000 Abstract_Ulam_Sequence.py:133(next)
+    52700    0.036    0.000    0.054    0.000 Abstract_Ulam_Sequence.py:137(previous)
+      952    0.001    0.000    0.001    0.000 Abstract_Ulam_Sequence.py:141(__add__)
+       22    0.000    0.000    0.000    0.000 Abstract_Ulam_Sequence.py:147(__rmul__)
+   122789    0.063    0.000    0.087    0.000 Abstract_Ulam_Sequence.py:161(update_guess)
+      221    0.000    0.000    0.000    0.000 Abstract_Ulam_Sequence.py:164(update_exclusions)
+    17670    0.012    0.000    0.025    0.000 Abstract_Ulam_Sequence.py:188(__init__)
+      703    0.001    0.000    0.001    0.000 Abstract_Ulam_Sequence.py:21(__eq__)
+      651    0.000    0.000    0.001    0.000 Abstract_Ulam_Sequence.py:210(is_singleton)
+      465    0.001    0.000    0.004    0.000 Abstract_Ulam_Sequence.py:223(intersects)
+      465    0.002    0.000    0.010    0.000 Abstract_Ulam_Sequence.py:236(__add__)
+       31    0.000    0.000    0.000    0.000 Abstract_Ulam_Sequence.py:265(add_to_itself)
+    11364    0.031    0.000    0.094    0.000 Abstract_Ulam_Sequence.py:317(cut_out)
+    49475    0.013    0.000    0.013    0.000 Abstract_Ulam_Sequence.py:338(__init__)
+        1    0.000    0.000    0.000    0.000 Abstract_Ulam_Sequence.py:375(comparable_print)
+    17843    0.079    0.000    0.291    0.000 Abstract_Ulam_Sequence.py:387(shuffle_in)
+    17843    0.021    0.000    0.021    0.000 Abstract_Ulam_Sequence.py:393(<listcomp>)
+    17843    0.019    0.000    0.019    0.000 Abstract_Ulam_Sequence.py:394(<listcomp>)
+   138671    0.158    0.000    0.261    0.000 Abstract_Ulam_Sequence.py:41(__lt__)
+    29577    0.109    0.000    0.518    0.000 Abstract_Ulam_Sequence.py:436(cut_out)
+    29577    0.023    0.000    0.023    0.000 Abstract_Ulam_Sequence.py:442(<listcomp>)
+    29577    0.021    0.000    0.021    0.000 Abstract_Ulam_Sequence.py:443(<listcomp>)
+     1063    0.002    0.000    0.004    0.000 Abstract_Ulam_Sequence.py:476(select_larger_than)
+       56    0.000    0.000    0.000    0.000 Abstract_Ulam_Sequence.py:494(<listcomp>)
+     1488    0.013    0.000    0.304    0.000 Abstract_Ulam_Sequence.py:507(__add__)
+     1984    0.020    0.000    0.538    0.000 Abstract_Ulam_Sequence.py:519(__sub__)
+      496    0.001    0.000    0.340    0.001 Abstract_Ulam_Sequence.py:531(symmetric_difference)
+       31    0.006    0.000    0.865    0.028 Abstract_Ulam_Sequence.py:567(extend_one_sequence)
+       33    0.000    0.000    0.000    0.000 Abstract_Ulam_Sequence.py:61(less_than_wo_guess)
+        1    0.000    0.000    0.865    0.865 Abstract_Ulam_Sequence.py:668(coeff_up_to)
+        1    0.000    0.000    0.865    0.865 Abstract_Ulam_Sequence.py:680(UlamCoefficients)
+      520    0.001    0.000    0.001    0.000 Abstract_Ulam_Sequence.py:73(__le__)
+    41108    0.028    0.000    0.041    0.000 Abstract_Ulam_Sequence.py:93(__gt__)
+    47420    0.032    0.000    0.169    0.000 {built-in method _bisect.bisect_left}
+    47476    0.024    0.000    0.119    0.000 {built-in method _bisect.bisect_right}
+        1    0.000    0.000    0.865    0.865 {built-in method builtins.exec}
+    32695    0.003    0.000    0.003    0.000 {built-in method builtins.len}
+134807/129393    0.030    0.000    0.043    0.000 {built-in method builtins.max}
+    11291    0.006    0.000    0.020    0.000 {built-in method builtins.min}
+   122789    0.031    0.000    0.031    0.000 {built-in method math.ceil}
+      221    0.000    0.000    0.000    0.000 {method 'add' of 'set' objects}
+    21495    0.005    0.000    0.005    0.000 {method 'append' of 'list' objects}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+      960    0.000    0.000    0.000    0.000 {method 'insert' of 'list' objects}
+
+

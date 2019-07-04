@@ -64,5 +64,9 @@ if file:
         file.write(str(n) + '\n')
 
     file.close()
+elif 0:
+    import cProfile
+    print('ulam_sequence', n,X)
+    cProfile.run('print(ulam_sequence(n,X))')
 else:
     print(ulam_sequence(n,X))
