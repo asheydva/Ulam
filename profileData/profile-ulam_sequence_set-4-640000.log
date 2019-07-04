@@ -6,8 +6,8 @@ ulam_sequence 4 640000
    ncalls  tottime  percall  cumtime  percall filename:lineno(function)
         1    0.022    0.022  774.632  774.632 <string>:1(<module>)
         2    0.000    0.000    0.007    0.004 cp1252.py:18(encode)
-        1  753.220  753.220  773.429  773.429 ulam_sequence_set.py:19(ulam_sequence)
-  1873611    0.713    0.000    0.951    0.000 ulam_sequence_set.py:8(add_remove_plus_truth)
+        1  753.220  753.220  773.429  773.429 ulam_sequence.py:19(ulam_sequence)
+  1873611    0.713    0.000    0.951    0.000 ulam_sequence.py:8(add_remove_plus_truth)
         2    0.007    0.004    0.007    0.004 {built-in method _codecs.charmap_encode}
         1    0.000    0.000  774.632  774.632 {built-in method builtins.exec}
    202998   19.115    0.000   19.115    0.000 {built-in method builtins.min}

@@ -1,6 +1,7 @@
 from math import ceil
 from bisect import bisect_left
 from bisect import bisect_right
+from shutil import copyfile
 
 INFINITY = float("inf")
 
@@ -705,6 +706,7 @@ def import_ds(filename, ring):
 R = NonStandardRing()
 n = NonStandardInteger(1,0,R)
 one = NonStandardInteger(0,1,R)
+precomputedExclusionsFile = None
 U = NonStandardUlamSequence(R)
 
 
@@ -715,6 +717,8 @@ def UlamCoefficients(C):
 def write_all_Ulam_data_up_to(C):
     """Writes files with all of the important Ulam data."""
 
+    if precomputedExclusionsFile:
+        copyfile(precomputedExclusionsFile, "Exclusions_Data.txt")
     exclusions_file = open("Exclusions_Data.txt","a")
 
     while U.ulam_ds.sequence_list[-1].final.less_than_wo_guess(C*n):
@@ -752,16 +756,17 @@ def write_all_Ulam_data_up_to(C):
 
     multiple_rep_file.close()
 
-    return "All data written."
+    print("All data written.")
 
 
 if __name__ == "__main__":
     import sys, os
 
     if 0: # load previous results
-        ulam_ds = import_ds("Ulam_Coeff.txt",R)
-        one_rep_ds = import_ds("Ulam_One_Rep.txt",R)
-        multiple_rep_ds = import_ds("Ulam_Multiple_Rep.txt",R)
+        ulam_ds = import_ds("Input/Ulam_Coeff.txt",R)
+        one_rep_ds = import_ds("Input/Ulam_One_Rep.txt",R)
+        multiple_rep_ds = import_ds("Input/Ulam_Multiple_Rep.txt",R)
+        precomputedExclusionsFile = "Input/Exclusions_Data.txt"
 
         U = NonStandardUlamSequence(R, [ulam_ds, one_rep_ds, multiple_rep_ds])
 
@@ -774,8 +779,11 @@ if __name__ == "__main__":
     #         os.remove(fileName)
     #     file = open(fileName, 'w+')
 
-    if 1: # just print out
+    if 0: # just print out
         print(UlamCoefficients(C))
+
+    elif 1:
+        write_all_Ulam_data_up_to(C)
 
     elif 0: # profile
         import cProfile

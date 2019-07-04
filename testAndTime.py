@@ -17,14 +17,14 @@ if 0:
     str1 = str(n).rjust(2, '0')
     str2 = str(n * 1000).rjust(8, '0')
     logFile = ' test-' + str1 + '-' + str2 + '.log'
-    runAndTime("ulam_sequence_set.py " + str1 + ' ' + str2 + logFile)
+    runAndTime("ulam_sequence.py " + str1 + ' ' + str2 + logFile)
 
 if 0:
     for n in range(4, 17):
         str1 = str(n).rjust(2, '0')
         str2 = str(n * 1000000).rjust(8, '0')
         logFile = ' ulam_sequence-' + str1 + '-' + str2 + '.log'
-        runAndTime("ulam_sequence_set.py " + str1 + ' ' + str2 + logFile)
+        runAndTime("ulam_sequence.py " + str1 + ' ' + str2 + logFile)
 
 if 1:
     for n in range(2, 100):
