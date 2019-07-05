@@ -714,12 +714,12 @@ def UlamCoefficients(C):
     """Prints all Ulam coefficients up to C."""
     return U.coeff_up_to(C * n).comparable_print()
 
-def write_all_Ulam_data_up_to(C):
+def write_all_Ulam_data_up_to(C, outFolder="Results"):
     """Writes files with all of the important Ulam data."""
 
-    exclusionsFile = "Results/Exclusions_Data.txt"
+    exclusionsFile = outFolder+"/Exclusions_Data.txt"
     os.makedirs(os.path.dirname(exclusionsFile), exist_ok=True)
-    
+
     if precomputedExclusionsFile:
         copyfile(precomputedExclusionsFile, exclusionsFile)
         mode = "a"
@@ -735,7 +735,7 @@ def write_all_Ulam_data_up_to(C):
 
     exclusions_file.close()
 
-    ulam_file = open("Results/Ulam_Coeff.txt","w")
+    ulam_file = open(outFolder+"/Ulam_Coeff.txt","w")
     for seq in U.ulam_ds.sequence_list:
         initial = seq.initial
         final = seq.final
@@ -744,7 +744,7 @@ def write_all_Ulam_data_up_to(C):
 
     ulam_file.close()
 
-    one_rep_file = open("Results/Ulam_One_Rep.txt","w")
+    one_rep_file = open(outFolder+"/Ulam_One_Rep.txt","w")
     for seq in U.one_rep_ds.sequence_list:
         initial = seq.initial
         final = seq.final
@@ -753,7 +753,7 @@ def write_all_Ulam_data_up_to(C):
 
     one_rep_file.close()
 
-    multiple_rep_file = open("Results/Ulam_Multiple_Rep.txt","w")
+    multiple_rep_file = open(outFolder+"/Ulam_Multiple_Rep.txt","w")
     for seq in U.multiple_rep_ds.sequence_list:
         initial = seq.initial
         final = seq.final
@@ -768,32 +768,42 @@ def write_all_Ulam_data_up_to(C):
 if __name__ == "__main__":
     import sys, os
 
-    if 0: # load previous results
-        ulam_ds = import_ds("Input/Ulam_Coeff.txt",R)
-        one_rep_ds = import_ds("Input/Ulam_One_Rep.txt",R)
-        multiple_rep_ds = import_ds("Input/Ulam_Multiple_Rep.txt",R)
-        precomputedExclusionsFile = "Input/Exclusions_Data.txt"
+    # test correctness on specific sequences
+    if 1:
+        if 1:
+            # test creation from scratch
+            write_all_Ulam_data_up_to(5, "AbstractUlamDataUpTo5")
 
-        U = NonStandardUlamSequence(R, [ulam_ds, one_rep_ds, multiple_rep_ds])
+            # restart U
+            R = NonStandardRing()
+            U = NonStandardUlamSequence(R)
 
-    C = 10
-    if len(sys.argv) > 1:
-        C = int(sys.argv.pop(1))
-    # if len(sys.argv) > 1:
-    #     fileName = sys.argv.pop(1)
-    #     if os.path.exists(fileName):
-    #         os.remove(fileName)
-    #     file = open(fileName, 'w+')
+        if 1:
+            # load previous results
+            ulam_ds = import_ds("AbstractUlamDataUpTo5/Ulam_Coeff.txt",R)
+            one_rep_ds = import_ds("AbstractUlamDataUpTo5/Ulam_One_Rep.txt",R)
+            multiple_rep_ds = import_ds("AbstractUlamDataUpTo5/Ulam_Multiple_Rep.txt",R)
+            precomputedExclusionsFile = "AbstractUlamDataUpTo5/Exclusions_Data.txt"
 
-    if 0: # just print out
-        print(UlamCoefficients(C))
+            U = NonStandardUlamSequence(R, [ulam_ds, one_rep_ds, multiple_rep_ds])
 
-    elif 1:
-        write_all_Ulam_data_up_to(C)
+        write_all_Ulam_data_up_to(512, "AbstractUlamDataUpTo512")
 
-    elif 0: # profile
-        import cProfile
-        print('UlamCoefficients', C)
-        cProfile.run('UlamCoefficients(C)')
+    else:
+        # compute what asked from scratch
+        C = 6
+        if len(sys.argv) > 1:
+            C = int(sys.argv.pop(1))
+
+        if 0: # just print out
+            print(UlamCoefficients(C))
+
+        elif 1:
+            write_all_Ulam_data_up_to(C)
+
+        elif 0: # profile
+            import cProfile
+            print('UlamCoefficients', C)
+            cProfile.run('UlamCoefficients(C)')
 
 
