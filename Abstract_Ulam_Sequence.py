@@ -340,22 +340,23 @@ class ArithmeticSequence:
 
 class DisjointSequences:
     """Container of disjoint arithmetic sequences, kept in order."""
-    def __init__(self, disjoint_seq_list, check_disjoint = True, presorted = False):
+    def __init__(self, disjoint_seq_list):
+        # comment out currently unused arguments:
+        # def __init__(self, disjoint_seq_list, check_disjoint = False, presorted = True):
+        # #If the list of disjoint sequences isn't already sorted, start by sorting it.
+        # if not presorted:
+        #     disjoint_seq_list = sorted(disjoint_seq_list, key=lambda sequence: sequence.initial)
 
-        #If the list of disjoint sequences isn't already sorted, start by sorting it.
-        if not presorted:
-            disjoint_seq_list = sorted(disjoint_seq_list, key=lambda sequence: sequence.initial)
+        #     #If it is unknown if elements of list are disjoint, check that this is true.
+        #     if check_disjoint:
+        #         num_seq = len(disjoint_seq_list)
 
-            #If it is unknown if elements of list are disjoint, check that this is true.
-            if check_disjoint:
-                num_seq = len(disjoint_seq_list)
+        #         for i in range(num_seq - 1):
+        #             seq1 = disjoint_seq_list[i]
+        #             seq2 = disjoint_seq_list[i + 1]
 
-                for i in range(num_seq - 1):
-                    seq1 = disjoint_seq_list[i]
-                    seq2 = disjoint_seq_list[i + 1]
-
-                    if seq1.intersects(seq2):
-                        raise ValueError("Inputs must be disjoint sequences.")
+        #             if seq1.intersects(seq2):
+        #                 raise ValueError("Inputs must be disjoint sequences.")
 
         self.sequence_list = disjoint_seq_list
 
@@ -468,7 +469,7 @@ class DisjointSequences:
 
             new_seq_list = start_seq_list + middle_seq_list + end_seq_list
 
-        ds = DisjointSequences(new_seq_list, False, True)
+        ds = DisjointSequences(new_seq_list)
 
         return (ds, i_initial)
 
@@ -479,15 +480,15 @@ class DisjointSequences:
 
         #if self is empty, change nothing
         if len(new_seq_list) == 0:
-            return DisjointSequences(new_seq_list, False, True)
+            return DisjointSequences(new_seq_list)
 
         #if the bound is too small, change nothing
         if elem < new_seq_list[0].initial:
-            return DisjointSequences(new_seq_list, False, True)
+            return DisjointSequences(new_seq_list)
 
         #if the bound is too large, cut out everything
         if elem >= new_seq_list[-1].final:
-            return DisjointSequences([], False, True)
+            return DisjointSequences([])
 
         #otherwise, find the index of the smallest interval that intersects the bound
         initial_list = [seq.initial for seq in new_seq_list]
@@ -501,7 +502,7 @@ class DisjointSequences:
         if last_cut_seq.final > elem:
             uncut_seq_list = [ArithmeticSequence(elem.next(), last_cut_seq.final)] + uncut_seq_list
 
-        return DisjointSequences(uncut_seq_list, False, True)
+        return DisjointSequences(uncut_seq_list)
 
     def __add__(self, other):
         """Returns the union of self and other."""
@@ -554,13 +555,13 @@ class NonStandardUlamSequence:
             seq2 = ArithmeticSequence(n,2*n)
 
             #Disjoint sequences for the Ulam sequence
-            self.ulam_ds = DisjointSequences([seq1, seq2], False, True)
+            self.ulam_ds = DisjointSequences([seq1, seq2])
 
             #Disjoint sequences larger than the largest computed with one representation
-            self.one_rep_ds = DisjointSequences([], False, True)
+            self.one_rep_ds = DisjointSequences([])
 
             #Disjoint sequences larger than the largest computed with >1 representation
-            self.multiple_rep_ds = DisjointSequences([], False, True)
+            self.multiple_rep_ds = DisjointSequences([])
 
         else:
             #if data for specifying the sequence is provided, use that instead
@@ -590,8 +591,8 @@ class NonStandardUlamSequence:
                 representation_dictionary = seq1 + seq2
 
             #store results as disjoint sequences
-            one_rep_ds_guess = DisjointSequences(representation_dictionary["One representation"], False, True)
-            multiple_rep_ds_guess = DisjointSequences(representation_dictionary["Multiple representations"], False, True)
+            one_rep_ds_guess = DisjointSequences(representation_dictionary["One representation"])
+            multiple_rep_ds_guess = DisjointSequences(representation_dictionary["Multiple representations"])
 
             #remove anything too small
             one_rep_ds_guess = one_rep_ds_guess.select_larger_than(self.largest_constant_computed)
@@ -694,7 +695,7 @@ def import_ds(filename, ring):
 
     f.close()
 
-    return DisjointSequences(seq_list, False, True)
+    return DisjointSequences(seq_list)
 
 # default initialization
 R = NonStandardRing()
