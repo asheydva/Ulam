@@ -391,9 +391,10 @@ class DisjointSequences:
         return comparable_list
 
     def shuffle_in(self, seq, starting_index = 0):
-        """Unions in sequence seq into self. Can also return the last index where shuffling ends."""
+        """Unions in sequence seq into self. Return the last index where shuffling ends.
+        Don't create a new DisjointSequences object, update self"""
 
-        new_seq_list = self.sequence_list[0:]
+        new_seq_list = self.sequence_list # don't copy
 
         #obtain starting and ending points of the list of sequences
         initial_list = [seq.initial for seq in new_seq_list]
@@ -432,9 +433,7 @@ class DisjointSequences:
 
             new_seq_list = start_seq_list + [middle_seq] + end_seq_list
 
-        ds = DisjointSequences(new_seq_list, False, True)
-
-        return (ds, i_initial)
+        return i_initial
 
     def cut_out(self, seq, starting_index = 0):
         """Cuts out any elements of the sequence seq. Can also return the index of the last sequence where cutting occured."""
@@ -512,7 +511,7 @@ class DisjointSequences:
         i_initial = 0
 
         for seq in seq_list:
-            (ds_new, i_initial) = ds_new.shuffle_in(seq, i_initial)
+            i_initial = ds_new.shuffle_in(seq, i_initial)
 
         return ds_new
 
