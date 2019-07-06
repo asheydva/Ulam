@@ -389,7 +389,7 @@ class DisjointSequences:
 
         return comparable_list
 
-    def shuffle_in(self, seq, return_index = False, starting_index = 0):
+    def shuffle_in(self, seq, starting_index = 0):
         """Unions in sequence seq into self. Can also return the last index where shuffling ends."""
 
         new_seq_list = self.sequence_list[0:]
@@ -433,12 +433,9 @@ class DisjointSequences:
 
         ds = DisjointSequences(new_seq_list, False, True)
 
-        if return_index:
-            return (ds, i_initial)
+        return (ds, i_initial)
 
-        return ds
-
-    def cut_out(self, seq, return_index = False, starting_index = 0):
+    def cut_out(self, seq, starting_index = 0):
         """Cuts out any elements of the sequence seq. Can also return the index of the last sequence where cutting occured."""
 
         new_seq_list = self.sequence_list[0:]
@@ -473,10 +470,7 @@ class DisjointSequences:
 
         ds = DisjointSequences(new_seq_list, False, True)
 
-        if return_index:
-            return (ds, i_initial)
-
-        return ds
+        return (ds, i_initial)
 
     def select_larger_than(self, elem):
         """Removes all elements smaller than elem."""
@@ -517,7 +511,7 @@ class DisjointSequences:
         i_initial = 0
 
         for seq in seq_list:
-            (ds_new, i_initial) = ds_new.shuffle_in(seq, True, i_initial)
+            (ds_new, i_initial) = ds_new.shuffle_in(seq, i_initial)
 
         return ds_new
 
@@ -529,7 +523,7 @@ class DisjointSequences:
         i_initial = 0
 
         for seq in seq_list:
-            (ds_new, i_initial) = ds_new.cut_out(seq, True, i_initial)
+            (ds_new, i_initial) = ds_new.cut_out(seq, i_initial)
 
         return ds_new
 
@@ -787,7 +781,7 @@ if __name__ == "__main__":
 
             U = NonStandardUlamSequence(R, [ulam_ds, one_rep_ds, multiple_rep_ds])
 
-        write_all_Ulam_data_up_to(512, "AbstractUlamDataUpTo512")
+        write_all_Ulam_data_up_to(64, "AbstractUlamDataUpTo64")
 
     else:
         # compute what asked from scratch
