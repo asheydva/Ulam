@@ -7,6 +7,7 @@
 #include <vector>
 #include <unordered_set>
 #include <algorithm>    // std::min_element, std::max_element
+#include <fstream>
 
 using namespace std;
 
@@ -44,7 +45,13 @@ int ulam_sequence(int n, int X)
 
     int largest_elem = n + 1;
     
-    cout << "1\n" << n << '\n';
+    ofstream tempFile("tempFile.txt");
+    if (!tempFile.is_open())
+    {
+        cerr << "can't open temp file\n";
+        return -1;
+    }
+    tempFile << "1\n" << n << '\n';
 
     while (true)
     {
@@ -74,9 +81,10 @@ int ulam_sequence(int n, int X)
             break;
 
         ulam_seq.push_back(largest_elem);
-        cout << largest_elem << '\n';
+        tempFile << largest_elem << '\n';
     }
 
+    tempFile.close();
     return ulam_seq.size();
 }
 
