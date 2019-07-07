@@ -77,13 +77,19 @@ int ulam_sequence(int n, int X)
 
 int main(int argc, char *argv[])
 {
-    for (int count = 0; count < argc; ++count)
-        cout << "command line arguments: " << count << " " << argv[count] << '\n';
+    //for (int count = 1; count < argc; ++count)
+    //    cerr << "command line argument: " << count << " " << argv[count] << '\n';
 
-    int n = 2;
-    int X = 1000;
-    string fileName = "";
+    int n = 4;
+    int X = 20000;
+    if (argc == 3)
+    {
+        sscanf_s(argv[1], "%d", &n);
+        sscanf_s(argv[2], "%d", &X);
+    }
+    //cerr << "computing ulam_sequence(" << n << "," << X << ")\n";
 
     int nMembers = ulam_sequence(n, X);
-    cout << "ulam_sequence(" << n << "," << X << ") has " << nMembers << " members\n";
+
+    //cerr << "ulam_sequence(" << n << "," << X << ") has " << nMembers << " members\n";
 }
