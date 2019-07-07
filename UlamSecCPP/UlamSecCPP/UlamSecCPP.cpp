@@ -10,7 +10,7 @@
 
 using namespace std;
 
-int min_element(unordered_set<int> set)
+inline int min_element(unordered_set<int> set)
 {
     // quick and dirty
     int curMit = INT_MAX;
@@ -21,7 +21,7 @@ int min_element(unordered_set<int> set)
 }
 
 // Adds/removes the element. Returns True if removes, False otherwise
-bool removeOrAdd(unordered_set<int> &set, int elem)
+inline bool removeOrAdd(unordered_set<int> &set, int elem)
 {
     // try to remove
     if (set.erase(elem))
@@ -34,8 +34,13 @@ bool removeOrAdd(unordered_set<int> &set, int elem)
 int ulam_sequence(int n, int X)
 {
     vector<int> ulam_seq{ 1, n };
+    ulam_seq.reserve(X);
+
     unordered_set<int> unique_set{ n + 1 };
     unordered_set<int> non_unique_set;
+    // somehow increasing hash size makes it 3 times slower
+    // unique_set.reserve(X);
+    // non_unique_set.reserve(X);
 
     int largest_elem = n + 1;
     
