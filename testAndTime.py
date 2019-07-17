@@ -20,16 +20,16 @@ if 0:
     runAndTime("ulam_sequence.py " + str1 + ' ' + str2 + logFile)
 
 if 1:
-    for n in range(4, 7):
+    for n in range(4, 18):
         str1 = str(n).rjust(2, '0')
-        str2 = str(n * 100000).rjust(8, '0')
+        str2 = str(n * 1000000).rjust(8, '0')
         logFile = ' UlamSequenceDataCPP/ulam_sequence-' + str1 + '-' + str2 + '.log'
         runAndTime("run-cpp.bat " + str1 + ' ' + str2 + logFile)
 
 if 0:
-    for n in range(4, 7):
+    for n in range(4, 18):
         str1 = str(n).rjust(2, '0')
-        str2 = str(n * 100000).rjust(8, '0')
+        str2 = str(n * 1000000).rjust(8, '0')
         logFile = ' UlamSequenceData/ulam_sequence-' + str1 + '-' + str2 + '.log'
         runAndTime("ulam_sequence.py " + str1 + ' ' + str2 + logFile)
 

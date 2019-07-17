@@ -16,3 +16,10 @@ ulam_sequence.py 10 10000000 ulam_sequence-10-10000000.log:  225716.99
 
 ulam_sequence.py 11 11000000 ulam_sequence-11-11000000.log:  263186.22
 
+# Computed by cpp program:
+
+run-cpp.bat 12 12000000 UlamSequenceDataCPP/ulam_sequence-12-12000000.log:  209677.55
+
+run-cpp.bat 13 13000000 UlamSequenceDataCPP/ulam_sequence-13-13000000.log:  236029.79
+
+run-cpp.bat 14 14000000 UlamSequenceDataCPP/ulam_sequence-14-14000000.log:  287016.04
