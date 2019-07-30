@@ -1,4 +1,4 @@
-# Regular Ulam sequences computed by Python script:
+# Regular Ulam sequences computed by Python script (time in sec):
 
 ulam_sequence.py 04 04000000 ulam_sequence-04-04000000.log:   33526.91
 
@@ -23,3 +23,9 @@ run-cpp.bat 12 12000000 UlamSequenceDataCPP/ulam_sequence-12-12000000.log:  2096
 run-cpp.bat 13 13000000 UlamSequenceDataCPP/ulam_sequence-13-13000000.log:  236029.79
 
 run-cpp.bat 14 14000000 UlamSequenceDataCPP/ulam_sequence-14-14000000.log:  287016.04
+
+run-cpp.bat 15 15000000 UlamSequenceDataCPP/ulam_sequence-15-15000000.log:  376650.26
+
+run-cpp.bat 16 16000000 UlamSequenceDataCPP/ulam_sequence-16-16000000.log:  365951.50
+
+run-cpp.bat 17 17000000 UlamSequenceDataCPP/ulam_sequence-17-17000000.log:  489634.25
