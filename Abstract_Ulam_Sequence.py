@@ -10,6 +10,7 @@ UPDATE_BOUND = INFINITY
 
 class NonStandardInteger():
     """Non-standard integer a*n + b of a non-standard ring."""
+    __slots__ = ['non_st_part','st_part','non_st_ring']
 
     def __init__(self, a, b, ring):
         self.non_st_part = a
@@ -152,6 +153,9 @@ class NonStandardInteger():
 
 class NonStandardRing():
     """Class to keep track of results of inequalities of non-standard integers."""
+
+    __slots__ = ['minimal_guess','exclusions_set']
+
     def __init__(self):
         self.minimal_guess = 1 #guesses minimal n needed to make all inequalities <, > valid.
         self.exclusions_set = set([]) #keeps track of all n that make != inequalities work.
@@ -190,6 +194,8 @@ class NonStandardRing():
 
 class ArithmeticSequence:
     """Sequence of consecutive non-standard integers between start and end."""
+    __slots__ = ['initial','final']
+
     def __init__(self, start, end):
         #Do not remove this comparison: it ensures the standardization is valid.
         if start > end:
@@ -340,6 +346,9 @@ class ArithmeticSequence:
 
 class DisjointSequences:
     """Container of disjoint arithmetic sequences, kept in order."""
+
+    __slots__ = ['sequence_list']
+
     def __init__(self, disjoint_seq_list, check_disjoint = True, presorted = False):
 
         #If the list of disjoint sequences isn't already sorted, start by sorting it.
@@ -544,6 +553,9 @@ class DisjointSequences:
 
 class NonStandardUlamSequence:
     """Ulam sequence over non-standard integers in the ring R."""
+
+    __slots__ = ['largest_constant_computed','ulam_ds','one_rep_ds','multiple_rep_ds','base_ring']
+
     def __init__(self,R,ulam_data = []):
         self.base_ring = R
 
@@ -805,5 +817,4 @@ if __name__ == "__main__":
             import cProfile
             print('UlamCoefficients', C)
             cProfile.run('UlamCoefficients(C)')
-
 
