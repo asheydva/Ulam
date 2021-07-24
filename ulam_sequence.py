@@ -5,46 +5,42 @@ n = 2
 X = 1000
 file = None
 
-def add_remove_plus_truth(set,elem):
-    """Adds/removes the element. Returns True if removes, False otherwise."""
 
-    if elem in set:
-        set.remove(elem)
-        return True
-
-    set.add(elem)
-    return False
-
-
-def ulam_sequence(n,X):
+def ulam_sequence(n, X, file = None, print_addends = False):
     """Constructs all terms up to X of U(1,n)."""
 
     ulam_seq = [1,n]
-    unique_set = set([n + 1])
-    non_unique_set = set()
-
-    largest_elem = n + 1
+    ulam_set = set(ulam_seq)
+    u_cand = ulam_seq[-1]
 
     while (True):
-        smallest_unique = min(unique_set) # this takes time
-
-        for elem in ulam_seq:
-            u = smallest_unique + elem
-
-            #Look in non_unique_set to see if u is in there
-            if (u not in non_unique_set):
-                if add_remove_plus_truth(unique_set, u):
-
-                    #If already in unique_set, add to non_unique_set
-                    non_unique_set.add(u)
-
-        largest_elem = min(unique_set) # this takes time
-        unique_set.remove(largest_elem)
-
-        if largest_elem > X:
+        u_cand += 1
+        if u_cand > X:
             break
-
-        ulam_seq.append(largest_elem)
+        found_sum = 0
+        addend = 0
+        for cur_u in reversed(ulam_seq):
+            other_u = u_cand - cur_u
+            if other_u >= cur_u:
+                break # done with u_cand
+            if other_u not in ulam_set:
+                continue
+            
+            found_sum += 1
+            if found_sum > 1:
+                # not unique
+                break
+            addend = cur_u # will use it if u_cand turns out to be Ulam
+        if found_sum == 1:
+            # register next Ulam number
+            ulam_seq.append(u_cand)
+            ulam_set.add(u_cand)
+            if file:
+                addend_str = ''
+                if print_addends:
+                    smaller_addend = u_cand - addend
+                    addend_str = ' ' + str(smaller_addend)
+                file.write(str(u_cand) + addend_str + '\n')
 
     return ulam_seq
 
@@ -60,8 +56,12 @@ if len(sys.argv) > 1:
 
 # print("ulam_sequence("+str(n)+","+str(X)+")", ulam_sequence(n,X))
 if file:
-    for n in ulam_sequence(n,X):
-        file.write(str(n) + '\n')
+    if 1:
+        # print inside the method with addends
+        ulam_sequence(n, X, file, True)
+    else:
+        for n in ulam_sequence(n,X):
+            file.write(str(n) + '\n')
 
     file.close()
 elif 0:

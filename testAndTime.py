@@ -12,14 +12,20 @@ from runAndTime import runAndTime
 # ulam_sequence.py 2 40000:     4.95
 # ulam_sequence.py 2 80000:    20.24
 
-if 0:
-    n = 4
-    str1 = str(n).rjust(2, '0')
-    str2 = str(n * 1000).rjust(8, '0')
-    logFile = ' test-' + str1 + '-' + str2 + '.log'
-    runAndTime("ulam_sequence.py " + str1 + ' ' + str2 + logFile)
+# simplified version on laptop:
+# py ulam_sequence.py 02 00160000   test-02-00160000.log:       8.04
+# py ulam_sequence.py 02 01600000   test-02-01600000.log:     739.94
+# py ulam_sequence.py 02 01000000 addend-02-01000000.log:     296.48
 
 if 1:
+    n = 2
+    X = 5000
+    str1 = str(n).rjust(2, '0')
+    str2 = str(n * X).rjust(8, '0')
+    logFile = ' addend-' + str1 + '-' + str2 + '.log'
+    runAndTime("py ulam_sequence.py " + str1 + ' ' + str2 + logFile)
+
+if 0:
     for n in range(4, 18):
         str1 = str(n).rjust(2, '0')
         str2 = str(n * 1000000).rjust(8, '0')
