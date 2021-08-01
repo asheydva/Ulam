@@ -17,9 +17,16 @@ from runAndTime import runAndTime
 # py ulam_sequence.py 02 01600000   test-02-01600000.log:     739.94
 # py ulam_sequence.py 02 01000000 addend-02-01000000.log:     296.48
 
+# py ulam_sequence.py 02 00010000 addend-02-00010000.log:       0.13 -- brute force
+# py ulam_sequence.py 02 00100000 addend-02-00100000.log:       3.03 -- brute force
+# py ulam_sequence.py 02 01000000 addend-02-01000000.log:     293.75 -- brute force
+
+# Gibbs:
+# py ulam_sequence.py 02 1000000000 addend-02-1000000000.log:    5947.57 -- 1.65 hr, 73,976,840 Ulam numbers
+
 if 1:
     n = 2
-    X = 5000
+    X = 500*1000*1000 
     str1 = str(n).rjust(2, '0')
     str2 = str(n * X).rjust(8, '0')
     logFile = ' addend-' + str1 + '-' + str2 + '.log'
