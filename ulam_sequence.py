@@ -1,72 +1,172 @@
 import sys, os
+from sortedcontainers import SortedSet
+
+# the algorithm was adopted from the paper by Philip Gibbs, see https://vixra.org/pdf/1508.0085v2.pdf
 
 # defaults
 n = 2
-X = 1000
+X = 13 # 1000
 file = None
+skip_launch_args = False
 
-def add_remove_plus_truth(set,elem):
-    """Adds/removes the element. Returns True if removes, False otherwise."""
+only_brute_force = False ###
 
-    if elem in set:
-        set.remove(elem)
-        return True
+# global data
+lamda = 2.44344296778474
+tolerance = 0.0001
+ulam_seq = [1]
+ulam_set = set(ulam_seq)
 
-    set.add(elem)
-    return False
+# residue(1) is 0.4092585802837928 - don't add to range sets
+low_range_set = SortedSet()
+high_range_set = SortedSet()
+
+def residue(u):
+    return u % lamda / lamda
+
+def register_ulam(u, res = None):
+    if res is None:
+        res = residue(u) 
+    ulam_seq.append(u)
+    ulam_set.add(u)
+
+    # sets are sorted by res, then u
+    if res < 0.8/2:
+        low_range_set.add((res, u))
+    elif res > 0.24/2 + 0.5:
+        high_range_set.add((res, u))
 
 
-def ulam_sequence(n,X):
-    """Constructs all terms up to X of U(1,n)."""
-
-    ulam_seq = [1,n]
-    unique_set = set([n + 1])
-    non_unique_set = set()
-
-    largest_elem = n + 1
-
-    while (True):
-        smallest_unique = min(unique_set) # this takes time
-
-        for elem in ulam_seq:
-            u = smallest_unique + elem
-
-            #Look in non_unique_set to see if u is in there
-            if (u not in non_unique_set):
-                if add_remove_plus_truth(unique_set, u):
-
-                    #If already in unique_set, add to non_unique_set
-                    non_unique_set.add(u)
-
-        largest_elem = min(unique_set) # this takes time
-        unique_set.remove(largest_elem)
-
-        if largest_elem > X:
+def is_ulam_brute_force(u_cand):
+    found_sum = 0
+    addend = 0
+    for cur_u in reversed(ulam_seq):
+        other_u = u_cand - cur_u
+        if other_u >= cur_u:
+            break # done with u_cand
+        if other_u not in ulam_set:
+            continue
+        
+        found_sum += 1
+        if found_sum > 1:
+            # not unique
             break
 
-        ulam_seq.append(largest_elem)
+        addend = cur_u # will use it if u_cand turns out to be Ulam
+    return found_sum == 1, addend
+
+
+def is_ulam_by_residue(u_cand, cand_res):
+    found_sum = 0
+    addend = 0
+    threshold = cand_res/2 + tolerance
+    for (cur_res, cur_u) in low_range_set.irange(maximum=(threshold,0)):
+        other_u = u_cand - cur_u
+        if other_u == cur_u:
+            continue # can't use the same number twice
+        if other_u == addend:
+            continue # this is the same pair as before
+        if other_u not in ulam_set:
+            continue
+        
+        found_sum += 1
+        if found_sum > 1:
+            # not unique
+            return False, addend
+
+        addend = cur_u # will use it if u_cand turns out to be Ulam
+
+    # from Gibbs: 2 * (1.0 - rdi) <= (1.0 - rd0)
+    threshold = cand_res/2 + 0.5 - tolerance
+    for (cur_res, cur_u) in high_range_set.irange(minimum=(threshold,0), reverse=True):
+        other_u = u_cand - cur_u
+        if other_u == cur_u:
+            continue # can't use the same number twice
+        if other_u == addend:
+            continue # this is the same pair as before
+        if other_u not in ulam_set:
+            continue
+        
+        found_sum += 1
+        if found_sum > 1:
+            # not unique
+            break
+
+        addend = cur_u # will use it if u_cand turns out to be Ulam
+            
+    return found_sum == 1, addend
+
+
+
+
+def ulam_sequence(n, X, file = None, print_addends = False):
+    """Constructs all terms up to X of U(1,n)."""
+
+    register_ulam(n)
+    u_cand = n
+
+    while (True):
+        u_cand += 1
+        if u_cand > X:
+            break
+        
+        res = residue(u_cand)
+        is_ulam = False
+        if only_brute_force or (res < 0.24 - tolerance or res > 0.8 + tolerance):
+            is_ulam, addend = is_ulam_brute_force(u_cand)
+        elif not only_brute_force and not is_ulam:
+            is_ulam, addend = is_ulam_by_residue(u_cand, res)
+
+
+        if is_ulam:
+            # register next Ulam number
+            register_ulam(u_cand, res)
+
+            if file:
+                addend_str = ''
+                if print_addends:
+                    smaller_addend = min(addend, u_cand - addend)
+                    addend_str = ' ' + str(smaller_addend)
+                file.write(str(u_cand) + addend_str + '\n')
+                # file.write(str(residue(u_cand)) + '\n')
+
+    print('low_range_set', len(low_range_set))
+    # print(low_range_set)
+    # print
+    print('high_range_set', len(high_range_set))
+    # print(high_range_set)
+    # print
+    print('ulam_seq', len(ulam_seq))
+    print
 
     return ulam_seq
 
-if len(sys.argv) > 1:
-    n = int(sys.argv.pop(1))
-if len(sys.argv) > 1:
-    X = int(sys.argv.pop(1))
-if len(sys.argv) > 1:
-    fileName = sys.argv.pop(1)
-    if os.path.exists(fileName):
-        os.remove(fileName)
-    file = open(fileName, 'w+')
+if not skip_launch_args:
+    if len(sys.argv) > 1:
+        n = int(sys.argv.pop(1))
+    if len(sys.argv) > 1:
+        X = int(sys.argv.pop(1))
+    if len(sys.argv) > 1:
+        fileName = sys.argv.pop(1)
+        if os.path.exists(fileName):
+            os.remove(fileName)
+        file = open(fileName, 'w+')
 
 # print("ulam_sequence("+str(n)+","+str(X)+")", ulam_sequence(n,X))
 if file:
-    for n in ulam_sequence(n,X):
-        file.write(str(n) + '\n')
+    if 1:
+        # print inside the method with addends
+        ulam_sequence(n, X, file, True)
+    else:
+        for n in ulam_sequence(n,X):
+            file.write(str(n) + '\n')
 
     file.close()
-elif 0:
+elif 1:
     import cProfile
+    X = 1000*1000
     print('ulam_sequence', n,X)
-    cProfile.run('print(ulam_sequence(n,X))')
+    # cProfile.run('print(ulam_sequence(n,X))')
+    cProfile.run('ulam_sequence(n,X)')
 else:
     print(ulam_sequence(n,X))

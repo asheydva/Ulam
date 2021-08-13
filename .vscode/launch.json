@@ -6,7 +6,7 @@
          "type": "python",
          "request": "launch",
          "program": "${file}",
-         "args": ["5", "500"],
+         "args": [],
          "console": "integratedTerminal"
       }
    ]
