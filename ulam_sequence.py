@@ -6,8 +6,8 @@ from sortedcontainers import SortedSet
 # defaults
 n = 2
 X = 13 # 1000
-file = None
-skip_launch_args = False
+fileName = None
+skip_launch_args = True
 
 only_brute_force = False ###
 
@@ -148,12 +148,13 @@ if not skip_launch_args:
         X = int(sys.argv.pop(1))
     if len(sys.argv) > 1:
         fileName = sys.argv.pop(1)
-        if os.path.exists(fileName):
-            os.remove(fileName)
-        file = open(fileName, 'w+')
 
 # print("ulam_sequence("+str(n)+","+str(X)+")", ulam_sequence(n,X))
-if file:
+if fileName:
+    if os.path.exists(fileName):
+        os.remove(fileName)
+    file = open(fileName, 'w+')
+
     if 1:
         # print inside the method with addends
         ulam_sequence(n, X, file, True)
@@ -162,11 +163,14 @@ if file:
             file.write(str(n) + '\n')
 
     file.close()
-elif 1:
+
+elif 0:
+    # do profiling
     import cProfile
     X = 1000*1000
     print('ulam_sequence', n,X)
     # cProfile.run('print(ulam_sequence(n,X))')
     cProfile.run('ulam_sequence(n,X)')
 else:
+    # just print to screen
     print(ulam_sequence(n,X))
