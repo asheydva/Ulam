@@ -1,6 +1,6 @@
 # test and time ulam_sequence routine
 
-from runAndTime import runAndTime
+from runAndTimeCommand import runAndTimeCommand
 
 # sample results
 # ulam_sequence.py 2  1000:     0.17
@@ -26,25 +26,25 @@ from runAndTime import runAndTime
 
 if 1:
     n = 2
-    X = 500*1000*1000 
+    X = 11 #500*1000*1000 
     str1 = str(n).rjust(2, '0')
     str2 = str(n * X).rjust(8, '0')
     logFile = ' addend-' + str1 + '-' + str2 + '.log'
-    runAndTime("py ulam_sequence.py " + str1 + ' ' + str2 + logFile)
+    runAndTimeCommand("py ulam_sequence.py " + str1 + ' ' + str2 + logFile)
 
 if 0:
     for n in range(4, 18):
         str1 = str(n).rjust(2, '0')
         str2 = str(n * 1000000).rjust(8, '0')
         logFile = ' UlamSequenceDataCPP/ulam_sequence-' + str1 + '-' + str2 + '.log'
-        runAndTime("run-cpp.bat " + str1 + ' ' + str2 + logFile)
+        runAndTimeCommand("run-cpp.bat " + str1 + ' ' + str2 + logFile)
 
 if 0:
     for n in range(4, 18):
         str1 = str(n).rjust(2, '0')
         str2 = str(n * 1000000).rjust(8, '0')
         logFile = ' UlamSequenceData/ulam_sequence-' + str1 + '-' + str2 + '.log'
-        runAndTime("ulam_sequence.py " + str1 + ' ' + str2 + logFile)
+        runAndTimeCommand("ulam_sequence.py " + str1 + ' ' + str2 + logFile)
 
 
 if 0:
@@ -53,5 +53,5 @@ if 0:
         str1 = str(C).rjust(4, '0')
         str2 = "" ### str(C * 100).rjust(8, '0')
         logFile = "" ###' Abstract_Ulam_Sequence-' + str1 + '-' + str2 + '.log'
-        runAndTime("Abstract_Ulam_Sequence.py " + str1 + ' ' + str2 + logFile)
+        runAndTimeCommand("Abstract_Ulam_Sequence.py " + str1 + ' ' + str2 + logFile)
 
