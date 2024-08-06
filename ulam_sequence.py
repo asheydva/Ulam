@@ -22,9 +22,11 @@ low_range_set = SortedSet()
 high_range_set = SortedSet()
 
 def residue(u):
+    ''' residue is in [0, 1] '''
     return u % lamda / lamda
 
 def register_ulam(u, res = None):
+    ''' adds u to sets and list '''
     if res is None:
         res = residue(u) 
     ulam_seq.append(u)
@@ -57,8 +59,11 @@ def is_ulam_brute_force(u_cand):
 
 
 def is_ulam_by_residue(u_cand, cand_res):
+    ''' use Gibbs aglorithm '''
     found_sum = 0
     addend = 0
+
+    # iterate low range from smallest up
     threshold = cand_res/2 + tolerance
     for (cur_res, cur_u) in low_range_set.irange(maximum=(threshold,0)):
         other_u = u_cand - cur_u
@@ -76,6 +81,8 @@ def is_ulam_by_residue(u_cand, cand_res):
 
         addend = cur_u # will use it if u_cand turns out to be Ulam
 
+
+    # now iterate high range from largest down.
     # from Gibbs: 2 * (1.0 - rdi) <= (1.0 - rd0)
     threshold = cand_res/2 + 0.5 - tolerance
     for (cur_res, cur_u) in high_range_set.irange(minimum=(threshold,0), reverse=True):
@@ -90,7 +97,7 @@ def is_ulam_by_residue(u_cand, cand_res):
         found_sum += 1
         if found_sum > 1:
             # not unique
-            break
+            return False, addend
 
         addend = cur_u # will use it if u_cand turns out to be Ulam
             
@@ -110,11 +117,18 @@ def ulam_sequence(n, X, file = None, print_addends = False):
         if u_cand > X:
             break
         
-        res = residue(u_cand)
+        if only_brute_force:
+            res = None
+            use_brute_force = True
+        else:
+            res = residue(u_cand)
+            # use brute for low and high ends of residue
+            use_brute_force = res < 0.24 - tolerance or res > 0.8 + tolerance
+
         is_ulam = False
-        if only_brute_force or (res < 0.24 - tolerance or res > 0.8 + tolerance):
+        if use_brute_force:
             is_ulam, addend = is_ulam_brute_force(u_cand)
-        elif not only_brute_force and not is_ulam:
+        else:
             is_ulam, addend = is_ulam_by_residue(u_cand, res)
 
 
@@ -130,13 +144,13 @@ def ulam_sequence(n, X, file = None, print_addends = False):
                 file.write(str(u_cand) + addend_str + '\n')
                 # file.write(str(residue(u_cand)) + '\n')
 
-    print('low_range_set', len(low_range_set))
+    print('low_range_set size:', len(low_range_set))
     # print(low_range_set)
     # print
-    print('high_range_set', len(high_range_set))
+    print('high_range_set size:', len(high_range_set))
     # print(high_range_set)
     # print
-    print('ulam_seq', len(ulam_seq))
+    print('ulam_seq size:', len(ulam_seq))
     print
 
     return ulam_seq
