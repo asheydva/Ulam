@@ -14,10 +14,10 @@ only_brute_force = False ###
 # global data
 lamda = 2.44344296778474
 tolerance = 0.0001
-ulam_seq = [1]
+ulam_seq = []
 ulam_set = set(ulam_seq)
 
-# residue(1) is 0.4092585802837928 - don't add to range sets
+# sorted sets for residue and Ulam numbers
 low_range_set = SortedSet()
 high_range_set = SortedSet()
 
@@ -32,10 +32,16 @@ def register_ulam(u, res = None):
     ulam_seq.append(u)
     ulam_set.add(u)
 
+    # print("u, res", u, res)
+
     # sets are sorted by res, then u
-    if res < 0.8/2:
+    # the following was giving the wrong results:
+        # if res < 0.8/2:
+        # elif res > 0.24/2 + 0.5:
+    # let's put *everything* in the ranges for now, although this should be optimized
+    if res < 0.5 + tolerance:
         low_range_set.add((res, u))
-    elif res > 0.24/2 + 0.5:
+    elif res > 0.5 - tolerance:
         high_range_set.add((res, u))
 
 
@@ -59,7 +65,12 @@ def is_ulam_brute_force(u_cand):
 
 
 def is_ulam_by_residue(u_cand, cand_res):
-    ''' use Gibbs aglorithm '''
+    ''' use Gibbs aglorithm 
+        Thresholds are computed based on this statement:
+        If 𝑡 itself has a residue 𝑟 modulo 𝜆 and if 𝑎𝑛 + 𝑎𝑚 = 𝑡 then 𝑟𝑛 +𝑟𝑚 = 𝑟 or 𝑟+𝜆.
+        This means that one of the residues 𝑟𝑛 or 𝑟𝑚 must be in one of the ranges 0 < 𝑟𝑘 < 1 2 𝑟 or 1 2 (𝑟 +𝜆) < 𝑟𝑘 < 𝜆.
+        Therefore it is only necessary to test smaller Ulam number 𝑎𝑘 whose residue 𝑟𝑘  lies in these ranges to see if it forms a sum. 
+    '''
     found_sum = 0
     addend = 0
 
@@ -83,7 +94,6 @@ def is_ulam_by_residue(u_cand, cand_res):
 
 
     # now iterate high range from largest down.
-    # from Gibbs: 2 * (1.0 - rdi) <= (1.0 - rd0)
     threshold = cand_res/2 + 0.5 - tolerance
     for (cur_res, cur_u) in high_range_set.irange(minimum=(threshold,0), reverse=True):
         other_u = u_cand - cur_u
@@ -109,6 +119,8 @@ def is_ulam_by_residue(u_cand, cand_res):
 def ulam_sequence(n, X, file = None, print_addends = False):
     """Constructs all terms up to X of U(1,n)."""
 
+    # register initial members
+    register_ulam(1)
     register_ulam(n)
     u_cand = n
 
@@ -123,7 +135,8 @@ def ulam_sequence(n, X, file = None, print_addends = False):
         else:
             res = residue(u_cand)
             # use brute for low and high ends of residue
-            use_brute_force = res < 0.24 - tolerance or res > 0.8 + tolerance
+            # Gibbs: if (rd0 < 0.24 || rd0 > 0.80) { // to mind the gap use the brute search
+            use_brute_force = res < 0.24 or res > 0.8
 
         is_ulam = False
         if use_brute_force:
