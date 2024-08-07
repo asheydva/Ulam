@@ -23,6 +23,9 @@ from runAndTimeCommand import runAndTimeCommand
 
 # Gibbs:
 # py ulam_sequence.py 02 1000000000 addend-02-1000000000.log:    5947.57 -- 1.65 hr, 73,976,840 Ulam numbers
+# version of 8/07/2024:
+# py ulam_sequence.py 02 01000000 addend-02-01000000.log:       3.54
+# py ulam_sequence.py 02 10000000 addend-02-10000000.log:      38.18
 
 if 1:
     n = 2
