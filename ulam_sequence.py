@@ -7,7 +7,7 @@ from sortedcontainers import SortedSet
 n = 2
 X = 13 # 1000
 fileName = None
-skip_launch_args = True
+skip_launch_args = False
 
 only_brute_force = False ###
 

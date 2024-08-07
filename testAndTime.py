@@ -28,7 +28,7 @@ if 1:
     n = 2
     X = 11 #500*1000*1000 
     str1 = str(n).rjust(2, '0')
-    str2 = str(n * X).rjust(8, '0')
+    str2 = str(X).rjust(8, '0')
     logFile = ' addend-' + str1 + '-' + str2 + '.log'
     runAndTimeCommand("py ulam_sequence.py " + str1 + ' ' + str2 + logFile)
 
