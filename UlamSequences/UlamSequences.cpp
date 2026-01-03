@@ -8,22 +8,27 @@
 const double PI{ std::atan(1.0) * 4.0 };
 const double EPSILON{ 1e-10 };
 
-// The basic O(n^2) algorithm for generating Ulam sequences U(a,b)
-std::vector<int> naive_Ulam_sequence(const int a, const int b, const int num_terms)
+// Struct to hold Ulam sequence data
+struct UlamOutput {
+	std::vector<int> ulam_terms;
+	std::set<int> unique_rep;
+	std::unordered_set<int> mult_rep;
+	int computed_terms{ 0 };
+};
+
+// The basic O(n^2) algorithm for generating Ulam sequences U(a,b) with prior state
+UlamOutput naive_Ulam_sequence(const int a, const int b, const int num_terms, UlamOutput& prior_state)
 {
-	// Initialize the Ulam sequence with the first two terms
-	std::vector<int> ulam_terms(num_terms);
-	ulam_terms[0] = a;
-	ulam_terms[1] = b;
+	// Create copy of prior Ulam terms
+	std::vector<int> ulam_terms{prior_state.ulam_terms};
+	ulam_terms.resize(num_terms);
 
-	// Initialize a set containing all elements with only one representation found so far
-	std::set<int> unique_rep{};
-
-	// Initialize an unordered set containing all elements with multiple representations
-	std::unordered_set<int> mult_rep{};
+	// Create copies of prior unique and multiple representation sets
+	std::set<int> unique_rep{prior_state.unique_rep};
+	std::unordered_set<int> mult_rep{prior_state.mult_rep};
 
 	// Compute Ulam terms iteratively
-	for (int i = 2; i < num_terms; i++) {
+	for (int i = prior_state.computed_terms; i < num_terms; i++) {
 		// Get latest Ulam number
 		const int u{ ulam_terms[i-1] };
 
@@ -50,14 +55,30 @@ std::vector<int> naive_Ulam_sequence(const int a, const int b, const int num_ter
 		unique_rep.erase(first_term);
 	}
 
-	return ulam_terms;
+	return UlamOutput{ulam_terms,unique_rep,mult_rep,num_terms};
+}
+
+// The basic O(n^2) algorithm for generating Ulam sequences U(a,b)
+UlamOutput naive_Ulam_sequence(const int a, const int b, const int num_terms) {
+	// Initialize UlamOutput struct
+	std::vector<int> ulam_terms(num_terms);
+	ulam_terms[0] = a;
+	ulam_terms[1] = b;
+
+	std::set<int> unique_rep{};
+	std::unordered_set<int> mult_rep{};
+
+	UlamOutput output{ ulam_terms, unique_rep, mult_rep, 2 };
+
+	return naive_Ulam_sequence(a, b, num_terms, output);
 }
 
 // Fourier helper function
-static double fourier_sum(const std::vector<int>& ulam_seq, const double x) {
+template <typename T>
+static double fourier_sum(const std::vector<T>& ulam_seq, const double x) {
 	double sum{ 0 };
 
-	for (int u : ulam_seq) {
+	for (T u : ulam_seq) {
 		sum += std::cos(u * x);
 	}
 
@@ -65,7 +86,8 @@ static double fourier_sum(const std::vector<int>& ulam_seq, const double x) {
 }
 
 // Rough approximation of signal using Fourier series
-static double fourier_approximation(const std::vector<int>& ulam_seq, const int num_steps) {
+template <typename T>
+static double fourier_approximation(const std::vector<T>& ulam_seq, const int num_steps) {
 	const double min_step{ PI / num_steps };
 
 	double min_x{ 0 };
@@ -115,7 +137,7 @@ static void extend_continued_fraction(MagicNumber* pMagic, const int term) {
 	pMagic->b_previous = b;
 }
 
-static void print(const MagicNumber* pMagic) {
+void print(const MagicNumber* pMagic) {
 	std::cout << "MagicNumber(" << pMagic->a_current << ", " << pMagic->b_current << "; "
 		<< pMagic->a_previous << ", " << pMagic->b_previous << ")\n";
 }
@@ -133,20 +155,62 @@ static MagicNumber compute_magic_number(const double fourier_approximation, cons
 		
 		if (remainder < EPSILON) {
 			// Terminating continued fraction
+
+			std::cout << "WARNING: Continued fraction terminated early at term " << i << "\n";
 			return magic;
 		}
 
 		lambda = 1 / remainder;
 		int term = static_cast<int>(std::floor(lambda));
 
-		if (term == 0) {
-			// Terminating continued fraction
-			return magic;
-		}
 		extend_continued_fraction(&magic, term);
 	}
 
 	return magic;
+}
+
+
+// Function to compute accuracy of MagicNumber against Ulam sequence data
+template <typename T>
+double compute_magic_accuracy(const MagicNumber* pMagic, const std::vector<T>& ulam_seq) {
+	const int a{ pMagic->a_current };
+	const int b{ pMagic->b_current };
+
+	double total_error{ 0.0 };
+
+	const int min_third{ a / 3 };
+	const int max_twothird{ (2 * a) / 3 };
+
+	for (T u : ulam_seq) {
+		int remainder{ (static_cast<long>(b) * u) % a };
+
+		if (remainder < min_third or remainder >= max_twothird) {
+			total_error += 1.0;
+		}
+	}
+
+	return 1-total_error / static_cast<double>(ulam_seq.size());
+}
+
+// Function to refine MagicNumber using Ulam sequence data
+// Returns whether refinement was successful
+template <typename T>
+bool refine_magic_number(MagicNumber* pMagic, const std::vector<T>& ulam_seq, const int breadth) {
+	bool refined{ false };
+	double current_accuracy{ compute_magic_accuracy(pMagic, ulam_seq) };
+
+	for (int term=1; term <= breadth; term++) {
+		MagicNumber candidate{ *pMagic };
+		extend_continued_fraction(&candidate, term);
+		double candidate_accuracy{ compute_magic_accuracy(&candidate, ulam_seq) };
+		
+		if (candidate_accuracy > current_accuracy) {
+			*pMagic = candidate;
+			current_accuracy = candidate_accuracy;
+			refined = true;
+		}
+	}
+	return refined;
 }
 
 int main()
@@ -155,16 +219,27 @@ int main()
 		int a = 2 * i + 1;
 
 		for (int res = (1 % a); res < a; res++) {
-			for (int k = 1; k < 10; k++) {		
+			for (int k = 1; k < 6; k++) {		
 				int b = a * k + res;
 
 				if (a!=5 or b!=6) {
-					std::cout << a << " " << b << " ";
-
-					auto ulam_seq{ naive_Ulam_sequence(a,b,200) };
-					double alpha{ fourier_approximation(ulam_seq, 2100) };
+					UlamOutput ulam_data{ naive_Ulam_sequence(a,b,200) };
+					double alpha{ fourier_approximation(ulam_data.ulam_terms, 13860) };
 					MagicNumber magic{ compute_magic_number(alpha, 4) };
-					print(&magic);
+
+					if (compute_magic_accuracy(&magic, ulam_data.ulam_terms) < .7) {
+						refine_magic_number(&magic, ulam_data.ulam_terms, 100);
+					}
+
+					std::cout << a << " " << b << " ";
+					std::cout << "Initial Accuracy: " << compute_magic_accuracy(&magic, ulam_data.ulam_terms) << "\n";
+					ulam_data = naive_Ulam_sequence(a, b, 1000, ulam_data);
+					std::cout << "Initial Accuracy (extended): " << compute_magic_accuracy(&magic, ulam_data.ulam_terms) << "\n";
+					if (refine_magic_number(&magic, ulam_data.ulam_terms, 100)) {
+						refine_magic_number(&magic, ulam_data.ulam_terms, 100);
+						std::cout << "Updated Accuracy (extended): " << compute_magic_accuracy(&magic, ulam_data.ulam_terms) << "\n";
+					}
+					std::cout << "\n";
 				}
 			}
 		}
