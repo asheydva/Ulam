@@ -1,0 +1,29 @@
+# Visual Code cache directory
+# .vscode/
+
+# Python cache
+__pycache__/
+
+############################################################################################
+## Visual Studio files 
+
+# Visual Studio user specific files
+*.suo
+*.user
+*.userosscache
+*.userprefs
+*.sln.docstates
+
+# Visual Studio Build Results
+bin/
+BrowseInfo/
+ipch/
+obj/
+Debug/
+Release/
+dlldata.c
+
+# Visual Studio cache directory
+.vs/
+
+
