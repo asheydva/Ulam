@@ -18,5 +18,19 @@
     <ClCompile Include="UlamSequences.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NaiveUlam.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SignalInitializiation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="NaiveUlam.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SignalInitialization.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
