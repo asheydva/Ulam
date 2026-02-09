@@ -14,21 +14,21 @@ UlamOutput naive_Ulam_sequence(const int a, const int b, const int num_terms, Ul
 	}
 
 	// Create copy of prior Ulam terms
-	std::vector<int> ulam_terms{ prior_state.ulam_terms };
+	std::vector<long> ulam_terms{ prior_state.ulam_terms };
 	ulam_terms.resize(num_terms);
 
 	// Create copies of prior unique and multiple representation sets
-	std::set<int> unique_rep{ prior_state.unique_rep };
-	std::unordered_set<int> mult_rep{ prior_state.mult_rep };
+	std::set<long> unique_rep{ prior_state.unique_rep };
+	std::unordered_set<long> mult_rep{ prior_state.mult_rep };
 
 	// Compute Ulam terms iteratively
 	for (int i = prior_state.computed_terms; i < num_terms; i++) {
 		// Get latest Ulam number
-		const int u{ ulam_terms[i - 1] };
+		const long u{ ulam_terms[i - 1] };
 
 		// Find all sums with previous Ulam terms
 		for (int j = 0; j < i - 1; j++) {
-			const int v{ u + ulam_terms[j] };
+			const long v{ u + ulam_terms[j] };
 
 			// If the element has multiple representations do nothing
 			// If the element has one representation, move it from unique_rep to mult_rep
@@ -56,12 +56,12 @@ UlamOutput naive_Ulam_sequence(const int a, const int b, const int num_terms, Ul
 // The basic O(n^2) algorithm for generating Ulam sequences U(a,b)
 UlamOutput naive_Ulam_sequence(const int a, const int b, const int num_terms) {
 	// Initialize UlamOutput struct
-	std::vector<int> ulam_terms(num_terms);
+	std::vector<long> ulam_terms(num_terms);
 	ulam_terms[0] = a;
 	ulam_terms[1] = b;
 
-	std::set<int> unique_rep{};
-	std::unordered_set<int> mult_rep{};
+	std::set<long> unique_rep{};
+	std::unordered_set<long> mult_rep{};
 
 	UlamOutput output{ ulam_terms, unique_rep, mult_rep, 2 };
 

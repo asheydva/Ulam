@@ -3,9 +3,9 @@
 
 // Struct to hold Ulam sequence data
 struct UlamOutput {
-	std::vector<int> ulam_terms;
-	std::set<int> unique_rep;
-	std::unordered_set<int> mult_rep;
+	std::vector<long> ulam_terms;
+	std::set<long> unique_rep;
+	std::unordered_set<long> mult_rep;
 	int computed_terms{ 0 };
 };
 

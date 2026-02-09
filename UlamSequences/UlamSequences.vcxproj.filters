@@ -21,7 +21,7 @@
     <ClCompile Include="NaiveUlam.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SignalInitializiation.cpp">
+    <ClCompile Include="SignalProcessing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,7 +29,7 @@
     <ClInclude Include="NaiveUlam.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="SignalInitialization.h">
+    <ClInclude Include="SignalProcessing.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

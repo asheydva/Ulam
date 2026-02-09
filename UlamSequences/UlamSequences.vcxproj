@@ -125,12 +125,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="NaiveUlam.cpp" />
-    <ClCompile Include="SignalInitializiation.cpp" />
+    <ClCompile Include="SignalProcessing.cpp" />
     <ClCompile Include="UlamSequences.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NaiveUlam.h" />
-    <ClInclude Include="SignalInitialization.h" />
+    <ClInclude Include="SignalProcessing.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -5,7 +5,7 @@
 #include <string>
 
 #include "NaiveUlam.h"
-#include "SignalInitialization.h"
+#include "SignalProcessing.h"
 
 // Function to print continued fraction
 std::string to_string(const ContinuedFraction& cf) {
@@ -40,6 +40,92 @@ double get_quotient(Convergent conv) {
 	double denominator{ static_cast<double>(conv.b_current) };
 
 	return numerator / denominator;
+}
+
+// Function to produce uniformly distributed points in [0,1]
+static double next_uniform_point() {
+	static double uniform_pt{ 0.0 };
+	uniform_pt += GOLDEN_RATIO;
+	uniform_pt -= std::floor(uniform_pt);
+
+	return uniform_pt;
+}
+
+// Fourier helper function
+static double fourier_sum(const UlamVector& ulam_seq, const double x) {
+	double sum{ 0 };
+
+	for (long u : ulam_seq) {
+		sum += std::cos(u * x);
+	}
+
+	return sum;
+}
+
+// Fourier helper function
+static double fourier_derivative_sum(const UlamVector& ulam_seq, const double x) {
+	double sum{ 0 };
+
+	for (long u : ulam_seq) {
+		sum -= u * std::sin(u * x);
+	}
+
+	return sum;
+}
+
+
+// Rough approximation of signal using Fourier series and search
+static double fourier_approximation(const UlamVector& ulam_seq, const int num_steps) {
+	const double min_step{ PI / num_steps };
+
+	double min_x{ 0 };
+	double min_y{ fourier_sum(ulam_seq, min_x) };
+
+	for (int i = 1; i <= num_steps; i++) {
+		const double x{ min_step * i };
+		const double y{ fourier_sum(ulam_seq, x) };
+
+		if (y < min_y) {
+			min_x = x;
+			min_y = y;
+		}
+	}
+
+	return min_x;
+}
+
+static Signal fourier_approximation(const UlamVector& ulam_seq, const FourierSettings& settings) {
+	// To be implemented
+}
+
+// Refine approximation of signal using gradient descent
+static double fourier_refinement(const double min_x, const UlamVector& ulam_seq, const double learning_rate, const int num_iterations) {
+	double x{ min_x };
+	for (int i = 0; i < num_iterations; i++) {
+		const double gradient{ fourier_derivative_sum(ulam_seq, x) };
+		if (std::abs(learning_rate * gradient) <= EPSILON) {
+			break;
+		}
+		else {
+			x = x - learning_rate * gradient;
+		}
+
+	}
+	return x;
+}
+
+// Function to compute proportion of Ulam elements in the middle third mod lambda
+double middle_third_proportion(const UlamVector& ulam_terms, double lambda) {
+	long count{ 0 };
+
+	for (long u : ulam_terms) {
+		double mod_value{ std::fmod(u, lambda) };
+		if (mod_value > lambda / 3.0 && mod_value < 2.0 * lambda / 3.0) {
+			count += 1;
+		}
+	}
+
+	return static_cast<double>(count) / static_cast<double>(ulam_terms.size());
 }
 
 // Function to produce initial data needed to compute Ulam sequences efficiently

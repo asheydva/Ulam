@@ -3,6 +3,22 @@
 
 const double PI{ std::atan(1.0) * 4.0 };
 const double EPSILON{ 1e-10 };
+const double GOLDEN_RATIO{(1.0+std::sqrt(5.0))/2.0};
+
+using UlamVector = std::vector<long>;
+
+// Struct to hold setting for Fourier search
+struct FourierSettings {
+	double xmin;
+	double xmax;
+};
+
+// Struct to hold signal data
+struct Signal {
+	double lower_bound;
+	double peak;
+	double upper_bound;
+};
 
 // Struct to hold continued fraction data
 struct ContinuedFraction {
@@ -21,7 +37,7 @@ struct Convergent {
 
 // Struct to hold data needed to initialize efficient Ulam sequence computation
 struct IntermediateUlamState {
-	std::vector<int> ulam_terms;
+	UlamVector ulam_terms;
 	double lambda;
 	double lambda_error;
 	int numerator;
@@ -39,67 +55,21 @@ struct UlamInputs {
 std::string to_string(const ContinuedFraction& cf);
 std::string to_string(const UlamInputs& inputs);
 
-//
-// All following functions are templates to allow for different integer types in Ulam sequences
-// They are static as they are subroutines for initialize_Ulam_state
+// Static subroutines for initialize_Ulam_state
 
-// Fourier helper function
-template <typename T>
-static double fourier_sum(const std::vector<T>& ulam_seq, const double x) {
-	double sum{ 0 };
+static double next_uniform_point();
 
-	for (T u : ulam_seq) {
-		sum += std::cos(u * x);
-	}
-
-	return sum;
-}
-
-// Fourier helper function
-template <typename T>
-static double fourier_derivative_sum(const std::vector<T>& ulam_seq, const double x) {
-	double sum{ 0 };
-
-	for (T u : ulam_seq) {
-		sum -= u * std::sin(u * x);
-	}
-
-	return sum;
-}
+// Fourier helper functions
+static double fourier_sum(const UlamVector& ulam_seq, const double x);
+static double fourier_derivative_sum(const UlamVector& ulam_seq, const double x);
 
 // Rough approximation of signal using Fourier series and search
-template <typename T>
-static double fourier_approximation(const std::vector<T>& ulam_seq, const int num_steps) {
-	const double min_step{ PI / num_steps };
-
-	double min_x{ 0 };
-	double min_y{ fourier_sum(ulam_seq, min_x) };
-
-	for (int i = 1; i <= num_steps; i++) {
-		const double x{ min_step * i };
-		const double y{ fourier_sum(ulam_seq, x) };
-
-		if (y < min_y) {
-			min_x = x;
-			min_y = y;
-		}
-	}
-
-	return min_x;
-}
+static double fourier_approximation(const UlamVector& ulam_seq, const int num_steps);
+static Signal fourier_approximation(const UlamVector& ulam_seq, const FourierSettings& settings);
 
 // Refine approximation of signal using gradient descent
-template <typename T>
-static double fourier_refinement(const double min_x, const std::vector<T>& ulam_seq, const double learning_rate, const int num_iterations) {
-	double x{ min_x };
-	for (int i = 0; i < num_iterations; i++) {
-		const double gradient{ fourier_derivative_sum(ulam_seq, x) };
-		x = x - learning_rate * gradient;
-	}
-	return x;
-}
+static double fourier_refinement(const double min_x, const UlamVector& ulam_seq, const double learning_rate, const int num_iterations);
 
-// Non-template functions
 // Functions for manipulating convergents
 
 // Update convergent with next term in continued fraction
@@ -108,11 +78,7 @@ void update_convergent(Convergent& conv, int term);
 // Get quotient from convergent
 double get_quotient(Convergent conv);
 
-//
-// All functions below are templates to allow for different integer types in Ulam sequences
-//
-
-// Function to compute continued fraction, accurate up to given error
+// Function template to compute continued fraction, accurate up to given error
 template <typename T>
 ContinuedFraction compute_continued_fraction(const T value, const T error) {
 	T remainder{ value };
@@ -147,19 +113,7 @@ ContinuedFraction compute_continued_fraction(const T value, const T error) {
 
 
 // Function to compute proportion of Ulam elements in the middle third mod lambda
-template <typename T>
-double middle_third_proportion(const std::vector<T>& ulam_terms, double lambda) {
-	long count{ 0 };
-
-	for (T u : ulam_terms) {
-		double mod_value{ std::fmod(u, lambda) };
-		if (mod_value > lambda / 3.0 && mod_value < 2.0 * lambda / 3.0) {
-			count += 1;
-		}
-	}
-
-	return static_cast<double>(count) / static_cast<double>(ulam_terms.size());
-}
+double middle_third_proportion(const UlamVector& ulam_terms, double lambda);
 
 // Function to produce initial data needed to compute Ulam sequences efficiently
 IntermediateUlamState initialize_Ulam_state(const UlamInputs& pair);
